@@ -1,18 +1,20 @@
-from scene import *
+from scene import Scene, Node, run, PORTRAIT
+import ui
+
+orientation = PORTRAIT
+frame_interval = 1
+show_fps = True
 
 
 class MyScene(Scene):
 
   def setup(self):
-    pass
+    self.ground = Node(parent=self)
+    dots_rect = ui.Path
+    print(self.size)
 
 
 if __name__ == '__main__':
-
-  orientation = PORTRAIT
-  frame_interval = 1
-  show_fps = True
-
   my_scene = MyScene()
 
   run(my_scene,
