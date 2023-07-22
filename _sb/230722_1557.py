@@ -32,17 +32,19 @@ class MyScene(scene.Scene):
     self.dots = []
     c = ['#00ffff', '#00ff00', '#ff0000', '#ffff00']
     oval_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
-    #print(wrap_w)
-    _gap = wrap_h / BEAT
-    print(_gap)
+
+    _hd = wrap_h / 2
+    _gap = ((wrap_w + _hd) / BEAT) + _hd
+    _margin = wrap_w / 2
+
     for i in range(BEAT):
-      _x = (wrap_w / 2) - (wrap_h / 2)
+      _x = (_gap * i) - _margin
       dot = scene.ShapeNode(
         path=oval_path,
         fill_color=c[i],
         #position=(wrap_w / 2, 0),
         #position=(_x, 0),
-        position=(_gap, 0),
+        position=(_x, 0),
         parent=self.wrap,
       )
       self.dots.append(dot)
