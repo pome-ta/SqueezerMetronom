@@ -13,7 +13,9 @@ class MyScene(scene.Scene):
     self.ground = scene.Node(parent=self)
     w = self.size.width
     h = self.size.height
+    self.setup_dots(w, h)
 
+  def setup_dots(self, w, h):
     # --- set size
     pos_x = w / 2
     pos_y = h / 1.5
@@ -22,14 +24,16 @@ class MyScene(scene.Scene):
 
     position = (pos_x, pos_y)
     wrap_path = ui.Path.rect(0, 0, wrap_w, wrap_h)
-    # xxx: 透過できないかも
-    self.wrap = scene.ShapeNode(path=wrap_path,
-                                fill_color='#808080',
-                                position=position,
-                                parent=self.ground)
+
+    self.wrap_dot = scene.ShapeNode(
+      path=wrap_path,
+      #fill_color='#808080',
+      fill_color='clear',
+      position=position,
+      parent=self.ground)
 
     # --- set dots
-    
+
     c = ['#00ffff', '#00ff00', '#ff0000', '#ffff00']
     oval_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
 
@@ -40,15 +44,18 @@ class MyScene(scene.Scene):
     self.dots = [
       scene.ShapeNode(
         path=oval_path,
-        fill_color=c[i],
+        fill_color='clear',
+        stroke_color=c[i],
         position=((_gap * i) - _margin, 0),
-        parent=self.wrap,
+        parent=self.wrap_dot,
       ) for i in range(BEAT)
     ]
-    
+
+  def setup_controller(self, w, h):
+    pass
     # --- set controller
-    
-    
+    # ⏵
+    # ▪︎
 
 
 if __name__ == '__main__':
