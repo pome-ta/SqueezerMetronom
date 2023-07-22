@@ -18,14 +18,31 @@ class MyScene(scene.Scene):
     pos_x = w / 2
     pos_y = h / 1.5
     wrap_w = min(w, h) / 1.5
-    wrap_h = max(w, h) / 16
+    wrap_h = max(w, h) / 24
 
     position = (pos_x, pos_y)
-    wrap_rect = ui.Path.rect(0, 0, wrap_w, wrap_h)
-    self.wrap = scene.ShapeNode(path=wrap_rect,
+    wrap_path = ui.Path.rect(0, 0, wrap_w, wrap_h)
+    # xxx: 透過できないかも
+    self.wrap = scene.ShapeNode(path=wrap_path,
+                                fill_color='#808080',
                                 position=position,
                                 parent=self.ground)
-    #self.ground.add_child(self.wrap)
+
+    self.dots = []
+    c = ['#00ffff', '#00ff00', '#ff0000', '#ffff00']
+    oval_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
+    #print(wrap_w)
+    for i in range(4):
+      _x = (wrap_w / 2) - (wrap_h / 2)
+      dot = scene.ShapeNode(
+        path=oval_path,
+        fill_color=c[i],
+        #position=(wrap_w / 2, 0),
+        #position=(_x, 0),
+        position=(0, 0),
+        parent=self.wrap,
+      )
+      self.dots.append(dot)
 
 
 if __name__ == '__main__':
