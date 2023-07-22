@@ -10,8 +10,9 @@ class MyScene(Scene):
 
   def setup(self):
     self.ground = Node(parent=self)
+    w = self.size.width
+    h = self.size.height
     dots_rect = ui.Path
-    print(dir(self.size))
 
 
 if __name__ == '__main__':
