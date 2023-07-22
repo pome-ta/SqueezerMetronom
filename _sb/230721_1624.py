@@ -1,4 +1,4 @@
-from scene import Scene, Node, run, PORTRAIT
+from scene import Scene, Node, ShapeNode, run, PORTRAIT
 import ui
 
 orientation = PORTRAIT
@@ -12,7 +12,9 @@ class MyScene(Scene):
     self.ground = Node(parent=self)
     w = self.size.width
     h = self.size.height
-    dots_rect = ui.Path
+    wrap_rect = ui.Path.rect(0, 0, 100, 200)
+    self.wrap = ShapeNode(wrap_rect, parent=self.ground)
+    #self.ground.add_child(self.wrap)
 
 
 if __name__ == '__main__':
