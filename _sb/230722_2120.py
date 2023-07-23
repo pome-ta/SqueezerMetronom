@@ -15,6 +15,11 @@ class MyScene(scene.Scene):
     h = self.size.height
     self.setup_dots(w, h)
     self.setup_controller(w, h)
+    self.check_play(self.is_play)
+
+  def check_play(self, is_play):
+    self.play_btn.text = '⏵' if is_play else '▪︎'
+    self.is_play = is_play
 
   def setup_dots(self, w, h):
     # --- set size
@@ -71,8 +76,8 @@ class MyScene(scene.Scene):
     # --- set controller
     # ⏵
     # ▪︎
-
-    self.play_btn = scene.LabelNode()
+    font = ('Inconsolata', 24)
+    self.play_btn = scene.LabelNode(text='😭', font=font, parent=self.wrap_play)
 
 
 if __name__ == '__main__':
@@ -82,4 +87,5 @@ if __name__ == '__main__':
             orientation=orientation,
             frame_interval=frame_interval,
             show_fps=show_fps)
+
 
