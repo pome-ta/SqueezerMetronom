@@ -14,6 +14,7 @@ class MyScene(scene.Scene):
     w = self.size.width
     h = self.size.height
     self.setup_dots(w, h)
+    self.setup_controller(w, h)
 
   def setup_dots(self, w, h):
     # --- set size
@@ -52,10 +53,26 @@ class MyScene(scene.Scene):
     ]
 
   def setup_controller(self, w, h):
-    pass
+    self.is_play = False
+    pos_x = w / 2
+    pos_y = h / 2.5
+
+    wp_s = max(w, h) / 8
+    wp_path = ui.Path.rect(0, 0, wp_s, wp_s)
+    position = (pos_x, pos_y)
+
+    self.wrap_play = scene.ShapeNode(
+      path=wp_path,
+      fill_color='#808080',
+      #fill_color='clear',
+      position=position,
+      parent=self.ground)
+
     # --- set controller
     # ⏵
     # ▪︎
+
+    self.play_btn = scene.LabelNode()
 
 
 if __name__ == '__main__':
