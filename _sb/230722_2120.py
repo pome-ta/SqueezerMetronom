@@ -73,11 +73,17 @@ class MyScene(scene.Scene):
       position=position,
       parent=self.ground)
 
+    oval_path = ui.Path.oval(0, 0, wp_s * 0.8, wp_s * 0.8)
+    self.oval_wrap = scene.ShapeNode(path=oval_path,
+                                     fill_color='#ff00ff',
+                                     parent=self.wrap_play)
+
     # --- set controller
     # ⏵
     # ▪︎
-    font = ('Inconsolata', 24)
-    self.play_btn = scene.LabelNode(text='😭', font=font, parent=self.wrap_play)
+    font = ('Inconsolata', 64)
+    self.play_btn = scene.LabelNode(text='',size=self.oval_wrap.size, font=font, parent=self.oval_wrap)
+    
 
 
 if __name__ == '__main__':
@@ -87,5 +93,4 @@ if __name__ == '__main__':
             orientation=orientation,
             frame_interval=frame_interval,
             show_fps=show_fps)
-
 
