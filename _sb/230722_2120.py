@@ -82,8 +82,13 @@ class MyScene(scene.Scene):
     # ⏵
     # ▪︎
     font = ('Inconsolata', 64)
-    self.play_btn = scene.LabelNode(text='',size=self.oval_wrap.size, font=font, parent=self.oval_wrap)
-    
+    self.play_btn = scene.LabelNode(
+      text='',
+      #texture=None,
+      color='cyan',
+      #size=self.oval_wrap.size,
+      font=font,
+      parent=self.oval_wrap)
 
 
 if __name__ == '__main__':
