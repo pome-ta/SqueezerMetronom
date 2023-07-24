@@ -16,6 +16,10 @@ class MyScene(scene.Scene):
     self.setup_dots(w, h)
     self.setup_controller(w, h)
     self.check_play(self.is_play)
+    
+  def update(self):
+    [i for i in range(1000000)]
+    print(self.dt)
 
   def check_play(self, is_play):
     self.play_btn.text = '⏵' if is_play else '▪︎'
