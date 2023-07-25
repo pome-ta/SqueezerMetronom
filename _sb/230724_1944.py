@@ -1,6 +1,9 @@
 import scene
 import ui
 
+frame_interval = 1
+shows_fps = True
+
 
 class Canvas(scene.Scene):
 
@@ -48,9 +51,8 @@ class View(ui.View):
 
   def draw(self):
     # todo: init background color
-    w = self.width
-    h = self.height * self.height_ratio
-    wrap = ui.Path.rect(0, 0, w, h)
+    _, _, w, h = self.frame
+    wrap = ui.Path.rect(0, 0, w, h * self.height_ratio)
     #ui.set_color(BG_COLOR)
     wrap.fill()
 
@@ -58,18 +60,21 @@ class View(ui.View):
     _, _, w, h = self.frame
     self.scene_view.width = w
     self.scene_view.height = h * self.height_ratio
-    self.scene_view.x = w / 2 - self.scene_view.width / 2
+    self.scene_view.x = (w / 2) - (self.scene_view.width / 2)
 
   def setup_scene(self):
-    self.scene_view = scene.SceneView(frame_interval=2,
-                                      shows_fps=True,
-                                      scene=self.canvas)
-    #scene_view.frame_interval = 2
-    #scene_view.shows_fps = True
-    #scene_view.alpha = 0
-    #scene_view.scene = self.canvas
+    self.scene_view = scene.SceneView(frame_interval=frame_interval,
+                                      shows_fps=shows_fps,
+                                      alpha=0)
+    self.scene_view.scene = self.canvas
     self.add_subview(self.scene_view)
-    #self.scene_view = scene_view
+
+  def setup_navigationbuttons(self):
+    show_console_icon = 'iob:ios7_download_outline_32'
+    show_console_button = create_button(show_console_icon)
+    show_console_button.action = self.show_console
+
+    self.right_button_items = [show_console_button]
 
   @ui.in_background
   def show_scene(self):
@@ -78,13 +83,6 @@ class View(ui.View):
       self.scene_view.alpha = 1
 
     ui.animate(dissolve, duration=.24)
-
-  def setup_navigationbuttons(self):
-    show_console_icon = 'iob:ios7_download_outline_32'
-    show_console_button = create_button(show_console_icon)
-    show_console_button.action = self.show_console
-
-    self.right_button_items = [show_console_button]
 
   @ui.in_background
   def show_console(self, sender):
