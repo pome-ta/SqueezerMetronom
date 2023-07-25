@@ -9,22 +9,34 @@ class Canvas(scene.Scene):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
+    self.counter = 0
 
-  @ui.in_background
+  #@ui.in_background
   def setup(self):
+    self.ground = scene.Node(parent=self)
     self.set_line(128)
+    position = self.size / 2
+    self.text = scene.LabelNode('', position=position, parent=self.ground)
+    self.update()
+    
+    #self.text.text = str(self.counter)
 
-  @ui.in_background
+  #@ui.in_background
   def update(self):
     #print(f'{self.t}')  # 画面左下にlog として表示される
-    pass
+    
+    ii = 0
+    for i in range(int(1e6)):
+      ii = str(i)
+    self.counter += 1
+    self.text.text = f'{ii}, {self.counter}'
 
   def set_line(self, dire):
     w2, h2 = self.size / 2
     path = ui.Path()
     path.move_to(w2 - dire, h2 - dire)
     path.line_to(w2 + dire, h2 + dire)
-    line = scene.ShapeNode(parent=self)
+    line = scene.ShapeNode(parent=self.ground)
     line.path = path
     line.stroke_color = 'red'
     line.position = self.size / 2
@@ -78,7 +90,7 @@ class View(ui.View):
 
     self.right_button_items = [show_console_button]
 
-  @ui.in_background
+  #@ui.in_background
   def show_scene(self):
 
     def dissolve():
