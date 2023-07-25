@@ -39,21 +39,23 @@ def create_button(icon_name):
 class View(ui.View):
 
   def __init__(self, canvas: scene.Scene):
+    self.bg_color = 0.88
     self.name: str = TITLE
     self.height_ratio: float = 0.96  # todo: safe area
 
-    self.canvas: scene.Scene = canvas
     self.scene_view: ui.View = None
+    self.canvas: scene.Scene = canvas
 
     self.setup_navigationbuttons()
     self.setup_scene()
     self.show_scene()
 
   def draw(self):
-    # todo: init background color
-    _, _, w, h = self.frame
-    wrap = ui.Path.rect(0, 0, w, h * self.height_ratio)
+    wrap = ui.Path.rect(0, 0, *self.canvas.size)
+
+    # xxx: init background color ?
     #ui.set_color(BG_COLOR)
+    ui.set_color(self.canvas.background_color)
     wrap.fill()
 
   def layout(self):
