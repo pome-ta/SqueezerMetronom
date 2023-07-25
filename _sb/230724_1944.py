@@ -2,6 +2,31 @@ import scene
 import ui
 
 
+class Canvas(scene.Scene):
+
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+
+  @ui.in_background
+  def setup(self):
+    self.set_line(128)
+
+  @ui.in_background
+  def update(self):
+    #print(f'{self.t}')  # 画面左下にlog として表示される
+    pass
+
+  def set_line(self, dire):
+    w2, h2 = self.size / 2
+    path = ui.Path()
+    path.move_to(w2 - dire, h2 - dire)
+    path.line_to(w2 + dire, h2 + dire)
+    line = scene.ShapeNode(parent=self)
+    line.path = path
+    line.stroke_color = 'red'
+    line.position = self.size / 2
+
+
 def create_button(icon_name):
   button_icon = ui.Image.named(icon_name)
   button = ui.ButtonItem(image=button_icon)
@@ -10,14 +35,12 @@ def create_button(icon_name):
 
 class View(ui.View):
 
-  def __init__(self, canvas):
-    #self.bg_color = TINT_COLOR
-    #self.tint_color = TITLE_COLOR
-    self.name = TITLE
-    self.height_ratio = 0.96  # todo: safe area
+  def __init__(self, canvas: scene.Scene):
+    self.name: str = TITLE
+    self.height_ratio: float = 0.96  # todo: safe area
 
-    self.canvas = canvas
-    self.scene_view = None
+    self.canvas: scene.Scene = canvas
+    self.scene_view: ui.View = None
 
     self.setup_navigationbuttons()
     self.setup_scene()
@@ -32,18 +55,21 @@ class View(ui.View):
     wrap.fill()
 
   def layout(self):
-    self.scene_view.width = self.width
-    self.scene_view.height = self.height * self.height_ratio
-    self.scene_view.x = self.width / 2 - self.scene_view.width / 2
+    _, _, w, h = self.frame
+    self.scene_view.width = w
+    self.scene_view.height = h * self.height_ratio
+    self.scene_view.x = w / 2 - self.scene_view.width / 2
 
   def setup_scene(self):
-    scene_view = scene.SceneView()
-    scene_view.frame_interval = 2
-    scene_view.shows_fps = True
-    scene_view.alpha = 0
-    scene_view.scene = self.canvas
-    self.add_subview(scene_view)
-    self.scene_view = scene_view
+    self.scene_view = scene.SceneView(frame_interval=2,
+                                      shows_fps=True,
+                                      scene=self.canvas)
+    #scene_view.frame_interval = 2
+    #scene_view.shows_fps = True
+    #scene_view.alpha = 0
+    #scene_view.scene = self.canvas
+    self.add_subview(self.scene_view)
+    #self.scene_view = scene_view
 
   @ui.in_background
   def show_scene(self):
@@ -51,7 +77,7 @@ class View(ui.View):
     def dissolve():
       self.scene_view.alpha = 1
 
-    ui.animate(dissolve, duration=.3)
+    ui.animate(dissolve, duration=.24)
 
   def setup_navigationbuttons(self):
     show_console_icon = 'iob:ios7_download_outline_32'
@@ -67,36 +93,10 @@ class View(ui.View):
     image.show()
 
 
-class Canvas(scene.Scene):
-
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    #self.background_color = BG_COLOR
-
-  @ui.in_background
-  def setup(self):
-    self.set_line(128)
-
-  def set_line(self, dire):
-    w2, h2 = self.size / 2
-    path = ui.Path()
-    path.move_to(w2 - dire, h2 - dire)
-    path.line_to(w2 + dire, h2 + dire)
-    line = scene.ShapeNode(parent=self)
-    line.path = path
-    line.stroke_color = 'red'
-    line.position = self.size / 2
-
-  @ui.in_background
-  def update(self):
-    #print(f'{self.t}')  # 画面左下にlog として表示される
-    pass
-
-
 if __name__ == '__main__':
   TITLE = 'title'
-  canvas = Canvas()
 
+  canvas = Canvas()
   view = View(canvas)
   view.present(style='fullscreen', orientations=['portrait'])
 
