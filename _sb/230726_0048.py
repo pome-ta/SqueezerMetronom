@@ -11,7 +11,13 @@ class Canvas(scene.Scene):
     print('setup')
     print(f'{self.size=}')
     self.ground = scene.Node(parent=self)
-    self.set_line(128)
+
+    self.line = scene.ShapeNode(parent=self.ground)
+    self.line.path = self.update_line(128)
+    self.line.stroke_color = 'red'
+    self.line.position = self.size / 2
+
+    #self.set_line(128)
 
   def update(self):
     pass
@@ -23,16 +29,15 @@ class Canvas(scene.Scene):
     print('did_change_size')
     print(f'{self.size=}')
     #self.set_line(128)
+    self.line.path = self.update_line(128)
+    self.line.position = self.size / 2
 
-  def set_line(self, dire):
+  def update_line(self, dire) -> ui.Path:
     w2, h2 = self.size / 2
     path = ui.Path()
     path.move_to(w2 - dire, h2 - dire)
     path.line_to(w2 + dire, h2 + dire)
-    line = scene.ShapeNode(parent=self.ground)
-    line.path = path
-    line.stroke_color = 'red'
-    line.position = self.size / 2
+    return path
 
 
 class View(ui.View):
@@ -49,9 +54,12 @@ class View(ui.View):
 
   def layout(self):
     _, _, w, h = self.frame
+    '''
     self.scene_view.width = w
     self.scene_view.height = h * self.height_ratio
     self.scene_view.x = (w / 2) - (self.scene_view.width / 2)
+    '''
+    self.scene_view.frame = (0, 0, w, h * self.height_ratio)
 
 
 if __name__ == '__main__':
