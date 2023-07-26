@@ -1,13 +1,14 @@
 import scene
 import ui
 
-frame_interval = 1
+frame_interval = 4
 shows_fps = True
 
 
 class Canvas(scene.Scene):
 
   def setup(self):
+    self.fps_over = False
     self.ground = scene.Node(parent=self)
 
     self.line = scene.ShapeNode(parent=self.ground)
@@ -37,34 +38,25 @@ class Canvas(scene.Scene):
 
 class View(ui.View):
 
-  def __init__(self, _canvas):
+  def __init__(self, scene_node:scene.Node):
     self.bg_color = 0.88
     self.height_ratio: float = 0.96  # todo: safe area
 
-    #self.canvas = canvas
-    self.canvas = scene.SceneView(scene=_canvas,
+    self.canvas = scene.SceneView(scene=scene_node,
                                   frame_interval=frame_interval,
                                   shows_fps=shows_fps)
 
-    #self.scene_view.flex = 'WH'
     self.add_subview(self.canvas)
 
   def layout(self):
     _, _, w, h = self.frame
-    '''
-    self.scene_view.width = w
-    self.scene_view.height = h * self.height_ratio
-    self.scene_view.x = (w / 2) - (self.scene_view.width / 2)
-    '''
     self.canvas.frame = (0, 0, w, h * self.height_ratio)
 
 
 if __name__ == '__main__':
   TITLE = 'title'
 
-  #scene_canvas = SceneCanvas()
-  scene_canvas = Canvas()
-  view = View(scene_canvas)
-  #view = scene.SceneView()
+  canvas = Canvas()
+  view = View(scene_node=canvas)
   view.present(style='fullscreen', orientations=['portrait'])
 
