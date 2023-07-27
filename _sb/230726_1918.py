@@ -7,14 +7,23 @@ shows_fps = True
 
 class Canvas(scene.Scene):
 
+  #@ui.in_background
+  def set_check_fps(self):
+    print(self.frame_interval)
+  
   def setup(self):
     self.fps_over = False
+    self.st_dt = self.view.frame_interval / 60
+    self.base_bg = self.background_color
+    self.error_bg = 'maroon'
+    
     self.ground = scene.Node(parent=self)
 
     self.line = scene.ShapeNode(parent=self.ground)
     self.line.path = self.update_line(128)
     self.line.stroke_color = 'red'
     self.line.position = self.size / 2
+    #self.set_check_fps()
 
     #self.set_line(128)
 
@@ -22,11 +31,13 @@ class Canvas(scene.Scene):
     pass
 
   def did_evaluate_actions(self):
+    #self.set_check_fps()
     pass
 
   def did_change_size(self):
     self.line.path = self.update_line(128)
     self.line.position = self.size / 2
+    
 
   def update_line(self, dire) -> ui.Path:
     w2, h2 = self.size / 2
