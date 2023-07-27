@@ -1,28 +1,26 @@
 import scene
 import ui
 
+
+import random
+
 frame_interval = 4
 shows_fps = True
 
 
 class Canvas(scene.Scene):
 
-  #@ui.in_background
-  def set_check_fps(self):
-    print(self.frame_interval)
-
   def setup(self):
     self.fps_over = False
     _st = self.view.frame_interval / 60
-    self.st_dt = _st - (_st / 100)
+    self.st_dt = _st + (_st / 100)
     self.base_bg = self.background_color
     self.error_bg = 'maroon'
 
     self.ground = scene.Node(parent=self)
-    
-    self.label = scene.LabelNode(parent=self,position=self.size / 2)
+
+    self.label = scene.LabelNode(parent=self, position=self.size / 2)
     self.label.text = 'あ'
-    
 
     self.line = scene.ShapeNode(parent=self.ground)
     self.line.path = self.update_line(128)
@@ -30,14 +28,16 @@ class Canvas(scene.Scene):
     self.line.position = self.size / 2
 
   def update(self):
-    
+
     #self.fps_over = True if self.dt < self.st_dt else False
     
-    for i in range(int(1e3)):
+    r = [1, 20, 10, 100, 1000, 1000]
+
+    for i in range(random.choice(r)):
       self.label.text = f'{self.st_dt=}\n{self.t=}\n{self.dt=}\n{i=}'
-    
-    self.fps_over = True if self.dt < self.st_dt else False
-      
+
+    self.fps_over = True if self.dt >= self.st_dt else False
+    self.label.text += f'\n{self.fps_over=}'
 
   def did_evaluate_actions(self):
     #self.fps_over = True if self.dt >= self.st_dt else False
@@ -48,7 +48,6 @@ class Canvas(scene.Scene):
     self.line.path = self.update_line(128)
     self.line.position = self.size / 2
     self.label.position = self.size / 2
-    
 
   def update_line(self, dire) -> ui.Path:
     w2, h2 = self.size / 2
