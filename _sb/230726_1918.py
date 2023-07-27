@@ -10,33 +10,44 @@ class Canvas(scene.Scene):
   #@ui.in_background
   def set_check_fps(self):
     print(self.frame_interval)
-  
+
   def setup(self):
     self.fps_over = False
-    self.st_dt = self.view.frame_interval / 60
+    _st = self.view.frame_interval / 60
+    self.st_dt = _st - (_st / 100)
     self.base_bg = self.background_color
     self.error_bg = 'maroon'
-    
+
     self.ground = scene.Node(parent=self)
+    
+    self.label = scene.LabelNode(parent=self,position=self.size / 2)
+    self.label.text = 'あ'
+    
 
     self.line = scene.ShapeNode(parent=self.ground)
     self.line.path = self.update_line(128)
     self.line.stroke_color = 'red'
     self.line.position = self.size / 2
-    #self.set_check_fps()
-
-    #self.set_line(128)
 
   def update(self):
-    pass
+    
+    #self.fps_over = True if self.dt < self.st_dt else False
+    
+    for i in range(int(1e3)):
+      self.label.text = f'{self.st_dt=}\n{self.t=}\n{self.dt=}\n{i=}'
+    
+    self.fps_over = True if self.dt < self.st_dt else False
+      
 
   def did_evaluate_actions(self):
-    #self.set_check_fps()
-    pass
+    #self.fps_over = True if self.dt >= self.st_dt else False
+    self.background_color = self.error_bg if self.fps_over else self.base_bg
+    self.fps_over = False
 
   def did_change_size(self):
     self.line.path = self.update_line(128)
     self.line.position = self.size / 2
+    self.label.position = self.size / 2
     
 
   def update_line(self, dire) -> ui.Path:
@@ -49,7 +60,7 @@ class Canvas(scene.Scene):
 
 class View(ui.View):
 
-  def __init__(self, scene_node:scene.Node):
+  def __init__(self, scene_node: scene.Node):
     self.bg_color = 0.88
     self.height_ratio: float = 0.96  # todo: safe area
 
