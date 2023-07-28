@@ -2,6 +2,7 @@ import scene
 import ui
 
 BEAT: int = 4
+
 frame_interval: int = 1
 shows_fps: bool = True
 '''
@@ -11,17 +12,31 @@ shows_fps: bool = True
 '''
 
 
-class TickClick:
+class Tick:
 
   def __init__(self, bpm: float = 120.0):
-    self.last_click: int = -1
-    self.mul_num = 0
+    self.bpm: float = bpm
+    self.stock_time: float
+    self.last_click: int
+    self.mul_num: float
+    self.set_up()
 
   def set_up(self):
-    pass
+    self.stock_time = 0.0
+    self.last_click = -1
+    self.mul_num = (60 * BEAT) / self.bpm
 
-  def set_bpm(self, bpm: float):
-    pass
+  def increment_time(self, dt: float):
+    self.stock_time += dt * self.mul_num
+
+  @property
+  def is_click(self) -> bool:
+    beat_time = int(self.stock_time)
+    if beat_time != self.last_click:
+      self.last_click += 1
+      return True
+    else:
+      return False
 
 
 class Canvas(scene.Scene):
@@ -29,20 +44,33 @@ class Canvas(scene.Scene):
   def __init__(self, bpm: float):
     super().__init__()
     self.bpm = bpm
-    self.beat: int = 0
+    self.beat: int = -1
     self.stack_time: float = 0.0
 
   def setup(self):
     self.ground = scene.Node(parent=self)
+    self.tick = Tick(self.bpm)
+
+    position = self.size / 2
+
+    self.label_beat = scene.LabelNode(parent=self.ground, position=position)
+    self.label_beat.text = 'あ'
+
+  def update_label(self):
+    self.tick.increment_time(self.dt)
+    if self.tick.is_click:
+      self.beat += 1
+      self.label_beat.text = str(self.beat)
 
   def update(self):
-    pass
+    self.update_label()
 
   def did_evaluate_actions(self):
     pass
 
   def did_change_size(self):
-    pass
+    position = self.size / 2
+    self.label_beat.position = position
 
 
 class View(ui.View):
