@@ -4,6 +4,24 @@ import ui
 BEAT: int = 4
 frame_interval: int = 1
 shows_fps: bool = True
+'''
+60 は1
+120 は0.5
+
+'''
+
+
+class TickClick:
+
+  def __init__(self, bpm: float = 120.0):
+    self.last_click: int = -1
+    self.mul_num = 0
+
+  def set_up(self):
+    pass
+
+  def set_bpm(self, bpm: float):
+    pass
 
 
 class Canvas(scene.Scene):
@@ -11,6 +29,7 @@ class Canvas(scene.Scene):
   def __init__(self, bpm: float):
     super().__init__()
     self.bpm = bpm
+    self.beat: int = 0
     self.stack_time: float = 0.0
 
   def setup(self):
@@ -46,9 +65,9 @@ class View(ui.View):
 
 if __name__ == '__main__':
   TITLE = 'title'
-  BPM: float = 120.0
+  beats_per_minute: float = 120.0
 
-  canvas = Canvas(BPM)
+  canvas = Canvas(beats_per_minute)
   view = View(scene_node=canvas)
   view.present(style='fullscreen', orientations=['portrait'])
 
