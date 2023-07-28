@@ -14,8 +14,9 @@ shows_fps: bool = True
 
 class Tick:
 
-  def __init__(self, bpm: float = 120.0):
+  def __init__(self, bpm: float = 120.0, beat: int = 4):
     self.bpm: float = bpm
+    self.beat: int = beat
     self.stock_time: float
     self.last_click: int
     self.mul_num: float
@@ -24,7 +25,7 @@ class Tick:
   def set_up(self):
     self.stock_time = 0.0
     self.last_click = -1
-    self.mul_num = (60 * BEAT) / self.bpm
+    self.mul_num = self.bpm / 60
 
   def increment_time(self, dt: float):
     self.stock_time += dt * self.mul_num
@@ -93,7 +94,7 @@ class View(ui.View):
 
 if __name__ == '__main__':
   TITLE = 'title'
-  beats_per_minute: float = 120.0
+  beats_per_minute: float = 100
 
   canvas = Canvas(beats_per_minute)
   view = View(scene_node=canvas)
