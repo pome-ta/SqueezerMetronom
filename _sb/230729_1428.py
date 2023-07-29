@@ -7,7 +7,7 @@ frame_interval: int = 1
 shows_fps: bool = True
 
 
-class Pulse:
+class Signal:
 
   def __init__(self, bpm: float = 120.0, beat: int = 4):
     self.bpm: float = bpm
@@ -20,20 +20,32 @@ class Pulse:
 
   def reset(self):
     self.stock_time = 0.0
-    self.last_click = -1
+    self.last_pulse = -1
     self.mul_num = self.bpm / 60
 
   def increment_time(self, dt: float):
     self.stock_time += dt * self.mul_num
 
   @property
-  def is_tick(self) -> bool:
+  def is_pulse(self) -> bool:
     beat_time = int(self.stock_time)
-    if beat_time != self.last_click:
-      self.last_click += 1
+    if beat_time != self.last_pulse:
+      self.last_pulse += 1  # xxx: 加算の意味あまりないから調整したい
       return True
     else:
       return False
+
+
+class Lamp(scene.Scene):
+
+  def setup(self):
+    self.ground = scene.Node(parent=self)
+
+  def update_size(self):
+    w, h = self.size
+
+  def setup_dots(self, w, h):
+    pass
 
 
 class Canvas(scene.Scene):
@@ -46,7 +58,7 @@ class Canvas(scene.Scene):
 
   def setup(self):
     self.ground = scene.Node(parent=self)
-    self.pulse = Pulse(self.bpm)
+    self.signal = Signal(self.bpm)
 
     position = self.size / 2
 
@@ -54,8 +66,8 @@ class Canvas(scene.Scene):
     self.label_beat.text = 'あ'
 
   def update_label(self):
-    self.pulse.increment_time(self.dt)
-    if self.pulse.is_tick:
+    self.signal.increment_time(self.dt)
+    if self.signal.is_pulse:
       self.beat += 1
       self.label_beat.text = str(self.beat)
 
