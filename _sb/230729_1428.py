@@ -36,8 +36,14 @@ class Signal:
       return False
 
 
-class Lamp(scene.Scene):
+class Lamp(scene.Node):
 
+  def __init__(self,*args, **kwargs):
+    super().__init__(*args, **kwargs)
+    #print(self.size)
+
+
+'''
   def setup(self):
     self.ground = scene.Node(parent=self)
 
@@ -46,6 +52,10 @@ class Lamp(scene.Scene):
 
   def setup_dots(self, w, h):
     pass
+
+  def did_change_size(self):
+    self.update_size()
+'''
 
 
 class Canvas(scene.Scene):
@@ -58,7 +68,10 @@ class Canvas(scene.Scene):
 
   def setup(self):
     self.ground = scene.Node(parent=self)
+    #
     self.signal = Signal(self.bpm)
+    #self.lamp = scene.ShapeNode(parent=self.ground)
+    self.lamp = Lamp(parent=self.ground)
 
     position = self.size / 2
 
