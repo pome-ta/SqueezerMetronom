@@ -38,8 +38,18 @@ class Signal:
 
 class Lamp(scene.Scene):
 
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.active_color = 'red'
+    self.deactive_color = 'blue'
+    self.oval_path: ui.Path
+    self.dots: list = []
+
   def setup(self):
     self.ground = scene.Node(parent=self)
+
+  def create_dot(self):
+    pass
 
   def update_size(self):
     w, h = self.size
@@ -53,8 +63,8 @@ class Lamp(scene.Scene):
 
 class Canvas(scene.Scene):
 
-  def __init__(self, bpm: float):
-    super().__init__()
+  def __init__(self, bpm: float, *args, **kwargs):
+    super().__init__(*args, **kwargs)
     self.bpm = bpm
     self.beat: int = -1
     self.stack_time: float = 0.0
@@ -92,10 +102,14 @@ class View(ui.View):
     self.bg_color = 0.88
     self.height_ratio: float = 0.96  # todo: safe area
 
-    self.canvas = scene.SceneView()
+    self.canvas = scene.SceneView(scene=scene_node,
+                                  frame_interval=frame_interval,
+                                  shows_fps=shows_fps)
+    '''
     self.canvas.scene = scene_node
     self.canvas.frame_interval = frame_interval
     self.canvas.shows_fps = shows_fps
+    '''
 
     self.add_subview(self.canvas)
 
