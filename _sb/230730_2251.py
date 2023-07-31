@@ -40,25 +40,41 @@ class Lamp(scene.Scene):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-    self.active_color = 'red'
-    self.deactive_color = 'blue'
+
+    color_tone = 'red'
+    self.active_is = {
+      'fill_color': color_tone,
+      'stroke_color': 'clear',
+    }
+    self.deactive_is = {
+      'fill_color': 'clear',
+      'stroke_color': color_tone,
+    }
+
     self.oval_path: ui.Path
     self.dots: list = []
 
   def setup(self):
     self.ground = scene.Node(parent=self)
+    self.dots = []
+    self.update_size_position()
 
-  def create_dot(self):
+  def create_dot(self) -> scene.ShapeNode:
+    return scene.ShapeNode(parent=self.ground)
+
+  def update_status(self, active_index: int):
     pass
 
-  def update_size(self):
+  def update_size_position(self):
     w, h = self.size
+    oval_w = min(w, h) / 1.5
+    oval_h = max(w, h) / 24
 
-  def setup_dots(self, w, h):
-    pass
+    self.oval_path = ui.Path.oval(0, 0, oval_w, oval_h)
+    self.oval_path.line_width = 2
 
   def did_change_size(self):
-    self.update_size()
+    self.update_size_position()
 
 
 class Canvas(scene.Scene):
@@ -105,12 +121,6 @@ class View(ui.View):
     self.canvas = scene.SceneView(scene=scene_node,
                                   frame_interval=frame_interval,
                                   shows_fps=shows_fps)
-    '''
-    self.canvas.scene = scene_node
-    self.canvas.frame_interval = frame_interval
-    self.canvas.shows_fps = shows_fps
-    '''
-
     self.add_subview(self.canvas)
 
   def layout(self):
