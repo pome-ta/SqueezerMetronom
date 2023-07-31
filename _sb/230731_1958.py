@@ -36,10 +36,19 @@ class Signal:
       return False
 
 
-class Lamp(scene.Scene):
+class Lamp(scene.ShapeNode):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
+
+    self.oval_path: ui.Path
+    self.wrap_path: ui.Path
+    self.wrap: scene.ShapeNode
+
+    self.parent_width: float
+    self.parent_height: float
+
+    self.dots: list
 
     color_tone = 'maroon'
     self.active_is = {
@@ -51,37 +60,34 @@ class Lamp(scene.Scene):
       'stroke_color': color_tone,
     }
 
-    self.oval_path: ui.Path
-    self.dots: list
-    self.set_up()  # xxx: `setup` が走らない
+    self.set_up()
 
   def set_up(self):
-    print('h')
-    self.background_color = 'clear'
-
-    self.ground = scene.Node(parent=self)
+    self.wrap = scene.ShapeNode(parent=self)
     self.dots = [self.create_dot() for _ in range(BEAT)]
-    self.update_size_position()
-    self.update_status(0)
+
+    self.change_size_position()
 
   def create_dot(self) -> scene.ShapeNode:
-    # xxx: 関数化無駄？
-    return scene.ShapeNode(parent=self.ground)
+    return scene.ShapeNode(parent=self.wrap)
 
   def update_status(self, active_index: int):
-    pass
+    for n, dot in enumerate(self.dots):
+      if n == active_index:
+        dot.fill_color = self.active_is['fill_color']
+        dot.stroke_color = self.active_is['stroke_color']
+      else:
+        dot.fill_color = self.deactive_is['fill_color']
+        dot.stroke_color = self.deactive_is['stroke_color']
 
-  def update_size_position(self):
-    w, h = self.size
-    oval_w = min(w, h) / 1.5
-    oval_h = max(w, h) / 24
+  def change_size_position(self):
+    self.parent_width, self.parent_height = self.parent.size
 
-    self.oval_path = ui.Path.oval(0, 0, oval_w, oval_h)
-    self.oval_path.line_width = 2
-
-  def did_change_size(self):
-    self.update_size_position()
-    print('c')
+    w, h = self.parent.size
+    pos_x = w / 2
+    pos_y = h / 1.5
+    wrap_w = min(w, h) / 1.5
+    wrap_h = max(w, h) / 24
 
 
 class Canvas(scene.Scene):
@@ -93,15 +99,15 @@ class Canvas(scene.Scene):
     self.stack_time: float = 0.0
 
   def setup(self):
-    self.ground = scene.Node(parent=self)
     self.signal = Signal(self.bpm)
-    self.lamp = Lamp(parent=self.ground)
+    self.lamp = Lamp(parent=self)
+    #print(self.ground.size)
     #self.lamp = Lamp()
     #self.ground.add_layer(self.lamp)
 
     position = self.size / 2
 
-    self.label_beat = scene.LabelNode(parent=self.ground, position=position)
+    self.label_beat = scene.LabelNode(parent=self, position=position)
     self.label_beat.text = 'あ'
 
   def update_label(self):
@@ -119,6 +125,7 @@ class Canvas(scene.Scene):
   def did_change_size(self):
     position = self.size / 2
     self.label_beat.position = position
+    #self.lamp.change_size_position()
 
 
 class View(ui.View):
