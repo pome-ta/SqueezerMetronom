@@ -41,7 +41,7 @@ class Lamp(scene.Scene):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
-    color_tone = 'red'
+    color_tone = 'maroon'
     self.active_is = {
       'fill_color': color_tone,
       'stroke_color': 'clear',
@@ -52,14 +52,17 @@ class Lamp(scene.Scene):
     }
 
     self.oval_path: ui.Path
-    self.dots: list = []
+    self.dots: list
 
   def setup(self):
+    print('h')
     self.ground = scene.Node(parent=self)
-    self.dots = []
+    self.dots = [self.create_dot() for _ in range(BEAT)]
     self.update_size_position()
+    self.update_status(0)
 
   def create_dot(self) -> scene.ShapeNode:
+    # xxx: 関数化無駄？
     return scene.ShapeNode(parent=self.ground)
 
   def update_status(self, active_index: int):
@@ -88,7 +91,10 @@ class Canvas(scene.Scene):
   def setup(self):
     self.ground = scene.Node(parent=self)
     self.signal = Signal(self.bpm)
-    self.lamp = Lamp(parent=self.ground)
+    #self.lamp = Lamp(parent=self.ground)
+    self.lamp = Lamp()
+    #self.ground.add_layer(self.lamp)
+    
 
     position = self.size / 2
 
