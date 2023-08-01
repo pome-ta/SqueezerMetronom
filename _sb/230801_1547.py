@@ -110,7 +110,6 @@ class Canvas(scene.Scene):
     super().__init__(*args, **kwargs)
     self.bpm = bpm
     self.beat: int = -1
-    self.stack_time: float = 0.0
 
   def setup(self):
     self.signal = Signal(self.bpm)
@@ -122,8 +121,7 @@ class Canvas(scene.Scene):
     self.label_beat.text = 'あ'
 
   def update_label(self):
-
-    self.label_beat.text = str(self.beat)
+    self.label_beat.text = f'{self.bpm}\n{str(self.beat)}'
 
   def update(self):
     self.signal.increment_time(self.dt)
@@ -131,7 +129,6 @@ class Canvas(scene.Scene):
       self.beat += 1
       self.update_label()
       self.lamp.update_status(self.beat % BEAT)
-      #print(self.beat % (BEAT))
 
   def did_evaluate_actions(self):
     pass
@@ -160,7 +157,7 @@ class View(ui.View):
 
 if __name__ == '__main__':
   TITLE = 'title'
-  beats_per_minute: float = 100
+  beats_per_minute: float = 100.0
 
   canvas = Canvas(beats_per_minute)
   view = View(scene_node=canvas)
