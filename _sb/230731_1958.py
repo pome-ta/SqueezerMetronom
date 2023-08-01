@@ -36,13 +36,13 @@ class Signal:
       return False
 
 
-class Lamp(scene.ShapeNode):
+class Lamp(scene.Node):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
-    self.oval_path: ui.Path
-    self.wrap_path: ui.Path
+    #self.oval_path: ui.Path
+    #self.wrap_path: ui.Path
     self.wrap: scene.ShapeNode
 
     self.parent_width: float
@@ -67,6 +67,7 @@ class Lamp(scene.ShapeNode):
     self.dots = [self.create_dot() for _ in range(BEAT)]
 
     self.change_size_position()
+    self.update_status(4)
 
   def create_dot(self) -> scene.ShapeNode:
     return scene.ShapeNode(parent=self.wrap)
@@ -89,6 +90,21 @@ class Lamp(scene.ShapeNode):
     wrap_w = min(w, h) / 1.5
     wrap_h = max(w, h) / 24
 
+    wrap_path = ui.Path.rect(0, 0, wrap_w, wrap_h)
+    oval_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
+
+    self.wrap.path = wrap_path
+    self.wrap.position = (pos_x, pos_y)
+
+    _hd = wrap_h / 2
+    _gap = ((wrap_w + _hd) / BEAT) + _hd
+    _margin = wrap_w / 2
+    for n, dot in enumerate(self.dots):
+      _x = _hd * n
+      #_x = (_gap * n) - _margin
+      dot.path = oval_path
+      dot.position = (-wrap_w / 2, 0.0)
+
 
 class Canvas(scene.Scene):
 
@@ -101,9 +117,6 @@ class Canvas(scene.Scene):
   def setup(self):
     self.signal = Signal(self.bpm)
     self.lamp = Lamp(parent=self)
-    #print(self.ground.size)
-    #self.lamp = Lamp()
-    #self.ground.add_layer(self.lamp)
 
     position = self.size / 2
 
@@ -125,7 +138,7 @@ class Canvas(scene.Scene):
   def did_change_size(self):
     position = self.size / 2
     self.label_beat.position = position
-    #self.lamp.change_size_position()
+    self.lamp.change_size_position()
 
 
 class View(ui.View):
