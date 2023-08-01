@@ -38,6 +38,18 @@ class Signal:
       return False
 
 
+def get_feedback_generator():
+  """
+  call feedback ex:
+  `UIImpactFeedbackGenerator.impactOccurred()`
+  """
+  style = 4  # 0-4
+  UIImpactFeedbackGenerator = ObjCClass('UIImpactFeedbackGenerator').new()
+  UIImpactFeedbackGenerator.prepare()
+  UIImpactFeedbackGenerator.initWithStyle_(style)
+  return UIImpactFeedbackGenerator
+
+
 class Feedback:
 
   def __init__(self):
@@ -125,6 +137,7 @@ class Canvas(scene.Scene):
     super().__init__(*args, **kwargs)
     self.bpm = bpm
     self.beat: int = -1
+    self.feed = get_feedback_generator()
 
   def setup(self):
     self.signal = Signal(self.bpm)
@@ -144,6 +157,7 @@ class Canvas(scene.Scene):
       self.beat += 1
       self.update_label()
       self.lamp.update_status(self.beat % BEAT)
+      self.feed.impactOccurred()
 
   def did_evaluate_actions(self):
     pass
