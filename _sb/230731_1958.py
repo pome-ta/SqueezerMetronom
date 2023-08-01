@@ -82,8 +82,6 @@ class Lamp(scene.Node):
         dot.stroke_color = self.deactive_is['stroke_color']
 
   def change_size_position(self):
-    self.parent_width, self.parent_height = self.parent.size
-
     w, h = self.parent.size
     pos_x = w / 2
     pos_y = h / 1.5
@@ -91,10 +89,12 @@ class Lamp(scene.Node):
     wrap_h = max(w, h) / 24
 
     wrap_path = ui.Path.rect(0, 0, wrap_w, wrap_h)
-    oval_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
-
     self.wrap.path = wrap_path
     self.wrap.position = (pos_x, pos_y)
+    
+    oval_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
+    print(wrap_w)
+    print(-wrap_w/2)
 
     _hd = wrap_h / 2
     _gap = ((wrap_w + _hd) / BEAT) + _hd
