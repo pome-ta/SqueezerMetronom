@@ -153,12 +153,12 @@ class Canvas(scene.Scene):
     self.bpm = bpm
     self.beat: int = -1
     self.beat_index: int = 0
-    #self.feed = get_feedback_generator()
-    self.feedback = Feedback()
+    
 
   def setup(self):
     self.signal = Signal(self.bpm)
     self.lamp = Lamp(parent=self)
+    self.feedback = Feedback()
 
     position = self.size / 2
 
@@ -176,7 +176,6 @@ class Canvas(scene.Scene):
       self.update_label()
       self.lamp.update_status(self.beat_index)
       self.feedback.weak if self.beat_index else self.feedback.strong
-      #self.feed.impactOccurred()
 
   def did_evaluate_actions(self):
     pass
@@ -205,7 +204,7 @@ class View(ui.View):
 
 if __name__ == '__main__':
   TITLE = 'title'
-  beats_per_minute: float = 100.0
+  beats_per_minute: float = 112.0
 
   canvas = Canvas(beats_per_minute)
   view = View(scene_node=canvas)
