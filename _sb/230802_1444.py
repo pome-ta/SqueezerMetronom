@@ -52,7 +52,7 @@ class Feedback:
   def weak(self):
     return self.__weak.impactOccurred()
 
-  def __get_feedback_generator(self, _style: int = 0) -> ObjCClass:
+  def __get_feedback_generator(self, style: int = 0) -> ObjCClass:
     """
     call feedback ex:
     `UIImpactFeedbackGenerator.impactOccurred()`
@@ -66,7 +66,6 @@ class Feedback:
       case soft = 3
       case rigid = 4
     '''
-    style = _style  # 0-4
     UIImpactFeedbackGenerator = ObjCClass('UIImpactFeedbackGenerator').new()
     UIImpactFeedbackGenerator.prepare()
     UIImpactFeedbackGenerator.initWithStyle_(style)
@@ -98,7 +97,7 @@ class Lamp(scene.Node):
       'fill_color': 'clear',
       'stroke_color': color_tone,
     }
-
+    
     self.set_up()
 
   def set_up(self):
