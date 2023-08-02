@@ -16,13 +16,13 @@ class Signal:
     self.beat: int = beat  # xxx: 拍数 ?
 
     self.stock_time: float
-    self.last_click: int
+    self.past_pulse: int
     self.mul_num: float
     self.reset()
 
   def reset(self):
     self.stock_time = 0.0
-    self.last_pulse = -1
+    self.past_pulse = -1
     self.mul_num = self.bpm / 60
 
   def increment_time(self, dt: float):
@@ -31,8 +31,8 @@ class Signal:
   @property
   def is_pulse(self) -> bool:
     beat_time = int(self.stock_time)
-    if beat_time != self.last_pulse:
-      self.last_pulse += 1  # xxx: 加算の意味あまりない ? 調整したい
+    if beat_time != self.past_pulse:
+      self.past_pulse += 1  # xxx: 加算の意味あまりない ? 調整したい
       return True
     else:
       return False
@@ -153,8 +153,11 @@ class Canvas(scene.Scene):
     self.bpm = bpm
     self.beat: int = -1
     self.beat_index: int = 0
+    self.is_play:bool
+    self.past_play:bool
 
   def setup(self):
+    
     self.signal = Signal(self.bpm)
     self.lamp = Lamp(parent=self)
     self.feedback = Feedback()
