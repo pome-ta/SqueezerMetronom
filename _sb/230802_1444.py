@@ -97,7 +97,7 @@ class Lamp(scene.Node):
       'fill_color': 'clear',
       'stroke_color': color_tone,
     }
-    
+
     self.set_up()
 
   def set_up(self):
@@ -153,7 +153,6 @@ class Canvas(scene.Scene):
     self.bpm = bpm
     self.beat: int = -1
     self.beat_index: int = 0
-    
 
   def setup(self):
     self.signal = Signal(self.bpm)
