@@ -41,7 +41,7 @@ class Signal:
 class Feedback:
 
   def __init__(self):
-    self.__strong = self.__get_feedback_generator(2)
+    self.__strong = self.__get_feedback_generator(4)
     self.__weak = self.__get_feedback_generator(0)
 
   @property
