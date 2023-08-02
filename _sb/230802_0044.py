@@ -56,6 +56,17 @@ class Feedback:
     self.__strong = ObjCClass('UIImpactFeedbackGenerator').new()
     self.__weak = ObjCClass('UIImpactFeedbackGenerator').new()
 
+  def get_feedback_generator(self, _style: int = 0) -> ObjCClass:
+    """
+    call feedback ex:
+    `UIImpactFeedbackGenerator.impactOccurred()`
+    """
+    style = _style  # 0-4
+    UIImpactFeedbackGenerator = ObjCClass('UIImpactFeedbackGenerator').new()
+    UIImpactFeedbackGenerator.prepare()
+    UIImpactFeedbackGenerator.initWithStyle_(style)
+    return UIImpactFeedbackGenerator
+
 
 class ClickSound:
 
