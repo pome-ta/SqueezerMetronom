@@ -38,29 +38,34 @@ class Signal:
       return False
 
 
-def get_feedback_generator():
-  """
-  call feedback ex:
-  `UIImpactFeedbackGenerator.impactOccurred()`
-  """
-  style = 4  # 0-4
-  UIImpactFeedbackGenerator = ObjCClass('UIImpactFeedbackGenerator').new()
-  UIImpactFeedbackGenerator.prepare()
-  UIImpactFeedbackGenerator.initWithStyle_(style)
-  return UIImpactFeedbackGenerator
-
-
 class Feedback:
 
   def __init__(self):
-    self.__strong = ObjCClass('UIImpactFeedbackGenerator').new()
-    self.__weak = ObjCClass('UIImpactFeedbackGenerator').new()
+    self.__strong = self.__get_feedback_generator(2)
+    self.__weak = self.__get_feedback_generator(0)
 
-  def get_feedback_generator(self, _style: int = 0) -> ObjCClass:
+  @property
+  def strong(self):
+    return self.__strong.impactOccurred()
+
+  @property
+  def weak(self):
+    return self.__weak.impactOccurred()
+
+  def __get_feedback_generator(self, _style: int = 0) -> ObjCClass:
     """
     call feedback ex:
     `UIImpactFeedbackGenerator.impactOccurred()`
     """
+    '''
+    https://developer.apple.com/documentation/uikit/uiimpactfeedbackgenerator/feedbackstyle
+      
+      case light = 0
+      case medium = 1
+      case heavy = 2
+      case soft = 3
+      case rigid = 4
+    '''
     style = _style  # 0-4
     UIImpactFeedbackGenerator = ObjCClass('UIImpactFeedbackGenerator').new()
     UIImpactFeedbackGenerator.prepare()
@@ -149,7 +154,8 @@ class Canvas(scene.Scene):
     self.bpm = bpm
     self.beat: int = -1
     self.beat_index: int = 0
-    self.feed = get_feedback_generator()
+    #self.feed = get_feedback_generator()
+    self.feedback = Feedback()
 
   def setup(self):
     self.signal = Signal(self.bpm)
@@ -170,7 +176,8 @@ class Canvas(scene.Scene):
       self.beat_index = self.beat % BEAT
       self.update_label()
       self.lamp.update_status(self.beat_index)
-      self.feed.impactOccurred()
+      self.feedback.weak if self.beat_index else self.feedback.strong
+      #self.feed.impactOccurred()
 
   def did_evaluate_actions(self):
     pass
