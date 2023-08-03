@@ -16,7 +16,12 @@ class Canvas(scene.Scene):
 
   def setup(self):
     self.label = scene.LabelNode(parent=self)
-    self.label.text = 'ほげ'
+    self.label.text = 'ほげが'
+
+    self.label_frame = self.label.frame
+    self.wrap = scene.ShapeNode(parent=self,
+                                fill_color='clear',
+                                stroke_color='maroon')
 
   def update(self):
     pass
@@ -26,6 +31,18 @@ class Canvas(scene.Scene):
 
   def did_change_size(self):
     self.label.position = self.size / 2
+    self.label.size = self.label.size * 6
+    
+    
+    
+    
+    self.label_frame = self.label.frame
+    self.wrap.path = ui.Path.rect(0, 0, *self.label_frame.size)
+
+    #self.wrap.position = self.label_frame.origin
+    self.wrap.position = self.label_frame.center()
+
+    #print(self.label_frame.center())
 
 
 class View(ui.View):
