@@ -22,9 +22,12 @@ class Canvas(scene.Scene):
                                  stroke_color=0.5)
 
     self.icon = scene.ShapeNode(parent=self)
-    self.wrap = scene.ShapeNode(parent=self,
-                                fill_color='clear',
-                                stroke_color='maroon')
+    self.wrap_rect = scene.ShapeNode(parent=self,
+                                     fill_color='clear',
+                                     stroke_color='magenta')
+    self.wrap_oval = scene.ShapeNode(parent=self,
+                                     fill_color='clear',
+                                     stroke_color='cyan')
 
   def update(self):
     pass
@@ -34,12 +37,16 @@ class Canvas(scene.Scene):
 
   def did_change_size(self):
     self.guide_change()
+
     self.icon.position = self.size / 2
 
     self.icon_frame = self.icon.frame
-    self.wrap.path = ui.Path.rect(0, 0, *self.icon_frame.size)
 
-    self.wrap.position = self.icon_frame.center()
+    self.wrap_rect.path = ui.Path.oval(0, 0, *self.icon_frame.size)
+    self.wrap_oval.path = ui.Path.rect(0, 0, *self.icon_frame.size)
+
+    self.wrap_rect.position = self.icon_frame.center()
+    self.wrap_oval.position = self.icon_frame.center()
 
   def guide_change(self):
     guide_path = ui.Path()
