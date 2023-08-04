@@ -22,7 +22,7 @@ class Canvas(scene.Scene):
                                  stroke_color=0.5)
 
     self.icon = scene.ShapeNode(parent=self,
-                                fill_color='clear',
+                                fill_color=0.1,
                                 stroke_color='yellow')
 
     self.wrap_rect = scene.ShapeNode(parent=self,
@@ -44,11 +44,11 @@ class Canvas(scene.Scene):
     # --- path
     sq_size = min(self.size) / 4
     icon_path = ui.Path()
-    for n, i in enumerate(range(0, 360, 36)):
+    for n, i in enumerate(range(0, 360, int(360/3))):
       rad = math.radians(i)
       _x = sq_size * math.sin(rad)
       _y = sq_size * math.cos(rad)
-      if n % 2 == 0:
+      if n == 0:
         icon_path.move_to(_x, _y)
       else:
         icon_path.line_to(_x, _y)
