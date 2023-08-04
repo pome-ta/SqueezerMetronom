@@ -1,3 +1,5 @@
+import math
+
 import scene
 import ui
 
@@ -19,11 +21,7 @@ class Canvas(scene.Scene):
                                  fill_color='clear',
                                  stroke_color=0.5)
 
-    self.label = scene.LabelNode(parent=self)
-    self.label.font = ('DIN Condensed', 20)
-    self.label.text = '-aあ'
-
-    self.label_frame = self.label.frame
+    self.icon = scene.ShapeNode(parent=self)
     self.wrap = scene.ShapeNode(parent=self,
                                 fill_color='clear',
                                 stroke_color='maroon')
@@ -35,6 +33,15 @@ class Canvas(scene.Scene):
     pass
 
   def did_change_size(self):
+    self.guide_change()
+    self.icon.position = self.size / 2
+
+    self.icon_frame = self.icon.frame
+    self.wrap.path = ui.Path.rect(0, 0, *self.icon_frame.size)
+
+    self.wrap.position = self.icon_frame.center()
+
+  def guide_change(self):
     guide_path = ui.Path()
 
     guide_path.move_to(0, 0)
@@ -47,16 +54,7 @@ class Canvas(scene.Scene):
     guide_path.move_to(0, self.size.y / 2)
     guide_path.line_to(self.size.x, self.size.y / 2)
     self.guide.path = guide_path
-
     self.guide.position = self.size / 2
-    self.label.position = self.size / 2
-
-    self.label.size = self.label.size * 6
-
-    self.label_frame = self.label.frame
-    self.wrap.path = ui.Path.rect(0, 0, *self.label_frame.size)
-
-    self.wrap.position = self.label_frame.center()
 
 
 class View(ui.View):
