@@ -1,3 +1,6 @@
+# xxx: [resizableImageWithCapInsets: | Apple Developer Documentation](resizableImageWithCapInsets)
+
+
 from objc_util import ObjCClass
 import ui
 
