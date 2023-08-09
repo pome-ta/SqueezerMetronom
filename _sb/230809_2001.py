@@ -31,10 +31,17 @@ class SymbolIcon:
     self.obj_img_view.setSize_((square_size, square_size))
     self.ui_img_view.width = square_size
     self.ui_img_view.height = square_size
-
+    '''
     out_data = self.ui_img_view._debug_quicklook_()
     out_img = ui.Image.from_data(out_data, 2)
     return out_img
+    '''
+    with ui.ImageContext(square_size, square_size, 2)as ctx:
+      self.ui_img_view.draw_snapshot()
+      self.out_img = ctx.get_image()
+
+
+      return self.out_img
 
 
 class Canvas(scene.Scene):
