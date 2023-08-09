@@ -7,8 +7,8 @@ UIImageView = ObjCClass('UIImageView')
 UIImage = ObjCClass('UIImage')
 UIImageSymbolConfiguration = ObjCClass('UIImageSymbolConfiguration')
 
-play = 'play'
-#play = 'battery.0'
+#play = 'play'
+play = 'battery.0'
 ui_image = UIImage.systemImageNamed_(play)
 
 #pdbg.state(ui_image)
@@ -20,10 +20,7 @@ img_h = ui_image.size().height
 
 s_size = 256.0
 i_scale = s_size / max(img_w, img_h)
-view_w = img_w * i_scale
-view_h = img_h * i_scale
-
-view_s = max(view_w, view_h)
+view_s = max(img_w * i_scale, img_h * i_scale)
 
 image_view_obj = UIImageView.new()
 image_view_obj.setSize_((view_s, view_s))
