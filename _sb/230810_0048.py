@@ -15,26 +15,33 @@ shows_fps: bool = True
 symbol_play = 'play'
 symbol_stop = 'stop'
 
+# xxx: どこまで事前に作るか、いまは無駄に処理してる
+play_img_obj = UIImage.systemImageNamed_(symbol_play)
+stop_img_obj = UIImage.systemImageNamed_(symbol_stop)
 
-class SymbolIcon:
+symbol_obj_dic = {
+  'play': play_img_obj,
+  'stop': stop_img_obj,
+}
 
-  def __init__(self, name: str):
-    self.uiimage = UIImage.systemImageNamed_(name)
-    self.obj_img_view = UIImageView.new()
-    self.obj_img_view.setImage_(self.uiimage)
-    self.obj_img_view.setContentMode_(1)
 
-    self.ui_img_view = ui.ImageView()
-    self.ui_img_view.objc_instance.addSubview_(self.obj_img_view)
+#@ui.in_background
+def get_icon(name: str, size: float) -> ui.Image:
+  icon_img = symbol_obj_dic[name]
+  image_view_obj = UIImageView.new()
+  image_view_obj.setSize_((size, size))
+  image_view_obj.setImage_(icon_img)
+  image_view_obj.setContentMode_(1)
 
-  def get_image(self, square_size: float) -> ui.Image:
-    self.obj_img_view.setSize_((square_size, square_size))
-    self.ui_img_view.width = square_size
-    self.ui_img_view.height = square_size
+  image_view = ui.ImageView()
+  image_view.width = size
+  image_view.height = size
+  image_view.objc_instance.addSubview_(image_view_obj)
 
-    out_data = self.ui_img_view._debug_quicklook_()
-    out_img = ui.Image.from_data(out_data, 2)
-    return out_img
+  outdata = image_view._debug_quicklook_()
+  out_png = ui.Image.from_data(outdata, 2)
+  #print(out_png)
+  return out_png
 
 
 class Canvas(scene.Scene):
@@ -43,9 +50,11 @@ class Canvas(scene.Scene):
     super().__init__(*args, **kwargs)
     self.icon_wrap: scene.ShapeNode
     self.icon_sprite: scene.SpriteNode
-    self.play_symbol = SymbolIcon(symbol_play)
+    self.bbb = get_icon(symbol_play, 49)
+    
 
   def setup(self):
+    
     self.__init_guide()
     self.__init_icon()
 
@@ -57,13 +66,17 @@ class Canvas(scene.Scene):
 
   def did_change_size(self):
     self.guide_change()
-    self.icon_change()
+    #self.icon_change()
 
   def __init_icon(self):
     self.icon_wrap = scene.ShapeNode(parent=self,
                                      fill_color='maroon',
                                      stroke_color='clear')
     self.icon_sprite = scene.SpriteNode(parent=self.icon_wrap)
+    self.ui_img = get_icon(symbol_play, 256)
+    #self.t_img = scene.Texture(self.ui_img)
+    self.t_img = scene.Texture(self.bbb)
+    self.icon_sprite.texture = self.t_img
     self.icon_change()
 
   def icon_change(self):
@@ -76,9 +89,6 @@ class Canvas(scene.Scene):
     #self.t_img = scene.Texture(self.bbb)
     self.icon_sprite.texture = self.t_img
     '''
-    self.play_img = self.play_symbol.get_image(o_size * 0.88)
-    self.play_tex = scene.Texture(self.play_img)
-    self.icon_sprite.texture = self.play_tex
 
   def __init_guide(self):
     self.guide = scene.ShapeNode(parent=self,
