@@ -1,6 +1,6 @@
 import scene
 import ui
-from objc_util import ObjCClass
+from objc_util import ObjCClass, on_main_thread
 
 import pdbg
 
@@ -27,6 +27,7 @@ class SymbolIcon:
     self.ui_img_view = ui.ImageView()
     self.ui_img_view.objc_instance.addSubview_(self.obj_img_view)
 
+  @on_main_thread
   def get_image(self, square_size: float) -> ui.Image:
     self.obj_img_view.setSize_((square_size, square_size))
     self.ui_img_view.width = square_size
