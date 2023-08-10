@@ -31,17 +31,18 @@ class SymbolIcon:
     self.obj_img_view.setSize_((square_size, square_size))
     self.ui_img_view.width = square_size
     self.ui_img_view.height = square_size
-    '''
-    out_data = self.ui_img_view._debug_quicklook_()
-    out_img = ui.Image.from_data(out_data, 2)
-    return out_img
+    
     '''
     with ui.ImageContext(square_size, square_size, 2)as ctx:
       self.ui_img_view.draw_snapshot()
       self.out_img = ctx.get_image()
-
-
       return self.out_img
+    
+    '''
+    #pdbg.state(self.ui_img_view.objc_instance.image())
+    self.out_data = self.ui_img_view._debug_quicklook_()
+    self.out_img = ui.Image.from_data(self.out_data, 2)
+    return self.out_img
 
 
 class Canvas(scene.Scene):
@@ -77,12 +78,7 @@ class Canvas(scene.Scene):
     o_size = min(self.size) / 4
     self.icon_wrap.path = ui.Path.oval(0, 0, o_size, o_size)
     self.icon_wrap.position = self.size / 2
-    '''
-    self.ui_img = get_icon(symbol_play, o_size)
-    self.t_img = scene.Texture(self.ui_img)
-    #self.t_img = scene.Texture(self.bbb)
-    self.icon_sprite.texture = self.t_img
-    '''
+    
     self.play_img = self.play_symbol.get_image(o_size * 0.88)
     self.play_tex = scene.Texture(self.play_img)
     self.icon_sprite.texture = self.play_tex
