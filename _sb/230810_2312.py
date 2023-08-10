@@ -1,11 +1,11 @@
 import scene
 import ui
-from objc_util import ObjCClass, on_main_thread
+from objc_util import ObjCClass, uiimage_to_png
 
 import pdbg
 
-UIImageView = ObjCClass('UIImageView')
 UIImage = ObjCClass('UIImage')
+UIImageSymbolConfiguration = ObjCClass('UIImageSymbolConfiguration')
 
 BEAT: int = 4
 
@@ -16,33 +16,16 @@ symbol_play = 'play'
 symbol_stop = 'stop'
 
 
-class SymbolIcon:
+def get_symbo_icon(symbol_name: str, point_size: float = 128.0) -> ui.Image:
+  _point_size = UIImageSymbolConfiguration.configurationWithPointSize_(
+    point_size)
+  ui_image = UIImage.systemImageNamed_withConfiguration_(
+    symbol_name, _point_size)
+  to_png = uiimage_to_png(ui_image)
+  png_img = ui.Image.from_data(to_png, 2)
+  return png_img
 
-  def __init__(self, name: str):
-    self.uiimage = UIImage.systemImageNamed_(name)
-    self.obj_img_view = UIImageView.new()
-    self.obj_img_view.setImage_(self.uiimage)
-    self.obj_img_view.setContentMode_(1)
 
-    self.ui_img_view = ui.ImageView()
-    self.ui_img_view.objc_instance.addSubview_(self.obj_img_view)
-
-  #@on_main_thread
-  def get_image(self, square_size: float) -> ui.Image:
-    self.obj_img_view.setSize_((square_size, square_size))
-    self.ui_img_view.width = square_size
-    self.ui_img_view.height = square_size
-    '''
-    with ui.ImageContext(square_size, square_size, 2)as ctx:
-      self.ui_img_view.draw_snapshot()
-      self.out_img = ctx.get_image()
-      return self.out_img
-    
-    '''
-    #pdbg.state(self.ui_img_view.objc_instance.image())
-    self.out_data = self.ui_img_view._debug_quicklook_()
-    self.out_img = ui.Image.from_data(self.out_data, 2)
-    return self.out_img
 
 
 class Canvas(scene.Scene):
@@ -51,8 +34,9 @@ class Canvas(scene.Scene):
     super().__init__(*args, **kwargs)
     self.icon_wrap: scene.ShapeNode
     self.icon_sprite: scene.SpriteNode
-    self.play_symbol = SymbolIcon(symbol_play)
-
+    _png_img = get_symbo_icon(symbol_play)
+    self.play_tex = scene.Texture(_png_img)
+    
   def setup(self):
     self.__init_guide()
     self.__init_icon()
@@ -74,15 +58,15 @@ class Canvas(scene.Scene):
     self.icon_sprite = scene.SpriteNode(parent=self.icon_wrap)
     self.icon_change()
 
-  #@on_main_thread
   def icon_change(self):
     o_size = min(self.size) / 4
     self.icon_wrap.path = ui.Path.oval(0, 0, o_size, o_size)
     self.icon_wrap.position = self.size / 2
 
-    self.play_img = self.play_symbol.get_image(o_size * 0.88)
-    self.play_tex = scene.Texture(self.play_img)
+    
+    
     self.icon_sprite.texture = self.play_tex
+    self.icon_sprite.size = (o_size, o_size)
 
   def __init_guide(self):
     self.guide = scene.ShapeNode(parent=self,
