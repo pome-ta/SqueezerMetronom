@@ -15,8 +15,10 @@ shows_fps: bool = True
 symbol_play = 'play'
 symbol_stop = 'stop'
 
+pdbg.state(UIImage)
 
 def get_symbo_icon(symbol_name: str, point_size: float = 128.0) -> ui.Image:
+  conf = UIImageSymbolConfiguration
   _point_size = UIImageSymbolConfiguration.configurationWithPointSize_(
     point_size)
   ui_image = UIImage.systemImageNamed_withConfiguration_(
