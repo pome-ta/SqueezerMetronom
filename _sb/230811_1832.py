@@ -1,3 +1,6 @@
+from PIL import Image as ImageP
+from io import BytesIO
+
 import scene
 import ui
 from objc_util import ObjCClass, uiimage_to_png
@@ -20,9 +23,23 @@ symbol_stop = 'stop'
 
 class SymbolIcon:
 
-  def __init__(self, name: str):
-    self.uiimage = UIImage.systemImageNamed_(name)
-    pass
+  def __init__(self, name: str, color: str = None, pointsize: float = 256.0):
+    uisc = UIImageSymbolConfiguration
+
+    conf: UIImageSymbolConfiguration
+    conf = uisc.defaultConfiguration()
+
+    _point_size = uisc.configurationWithPointSize_(pointsize)
+    _color = uisc.configurationPreferringMulticolor()
+
+    conf = conf.configurationByApplyingConfiguration_(_point_size)
+    conf = conf.configurationByApplyingConfiguration_(_color)
+
+    self.uiimage = UIImage.systemImageNamed_withConfiguration_(name, conf)
+
+  def get_icon_to_size(self, size: float) -> ui.Image:
+    width = self.uiimage.size().width
+    height = self.uiimage.size().height
 
 
 def get_symbo_icon(symbol_name: str, point_size: float = 128.0) -> ui.Image:
@@ -41,8 +58,18 @@ def get_symbo_icon(symbol_name: str, point_size: float = 128.0) -> ui.Image:
 
   #pdbg.state(ui_image)
   to_png = uiimage_to_png(ui_image)
-  png_img = ui.Image.from_data(to_png, 2)
-  return png_img
+  #print(to_png)
+
+  iii = ImageP.frombytes('RGBA', (20, 20), to_png)
+
+  #png_img = ui.Image.from_data(iii, 2)
+  #png_img = ui.Image.from_data(to_png, 2)
+  #return png_img
+  with BytesIO() as bIO:
+    iii.save(bIO, 'png')
+    re_img = ui.Image.from_data(bIO.getvalue())
+    #del iii
+    return re_img
 
 
 class Canvas(scene.Scene):
