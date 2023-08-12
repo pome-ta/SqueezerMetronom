@@ -57,19 +57,26 @@ def get_symbo_icon(symbol_name: str, point_size: float = 128.0) -> ui.Image:
   ui_image = UIImage.systemImageNamed_withConfiguration_(symbol_name, conf)
 
   #pdbg.state(ui_image)
-  to_png = uiimage_to_png(ui_image)
+  #to_png = uiimage_to_png(ui_image)
   #print(to_png)
+  
+  #re_img = ui.Image.from_data(to_png)
+  #print(re_img)
+  newimg = ImageP.new('RGBA', (256,256))
+  newimg.
 
-  iii = ImageP.frombytes('RGBA', (20, 20), to_png)
+  #iii = ImageP.frombytes('RGBA', (20, 20), to_png)
 
   #png_img = ui.Image.from_data(iii, 2)
   #png_img = ui.Image.from_data(to_png, 2)
   #return png_img
+  '''
   with BytesIO() as bIO:
     iii.save(bIO, 'png')
     re_img = ui.Image.from_data(bIO.getvalue())
     #del iii
     return re_img
+  '''
 
 
 class Canvas(scene.Scene):
