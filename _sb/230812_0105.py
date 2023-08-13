@@ -42,7 +42,7 @@ class SymbolIcon:
     height = self.uiimage.size().height
 
 
-def get_symbo_icon(symbol_name: str, point_size: float = 512.0) -> ui.Image:
+def get_symbo_icon(symbol_name: str, point_size: float = 128.0) -> ui.Image:
   conf: UIImageSymbolConfiguration
 
   conf = UIImageSymbolConfiguration.defaultConfiguration()
@@ -67,7 +67,8 @@ def get_symbo_icon(symbol_name: str, point_size: float = 512.0) -> ui.Image:
   img_bytes = BytesIO()
   pil_img.save(img_bytes, format='PNG')
   img_bytes = img_bytes.getvalue()
-  png_img = ui.Image.from_data(img_bytes, 2)
+  #png_img = ui.Image.from_data(img_bytes, 2)
+  png_img = ui.Image.from_data(to_png, 2)
   #newimg.
 
   #iii = ImageP.frombytes('RGBA', (20, 20), to_png)
@@ -124,7 +125,7 @@ class Canvas(scene.Scene):
     self.icon_wrap.position = self.size / 2
 
     self.icon_sprite.texture = self.play_tex
-    #self.icon_sprite.size = (o_size, o_size)
+    self.icon_sprite.size = (o_size * 0.64, o_size * 0.64)
 
   def __init_guide(self):
     self.guide = scene.ShapeNode(parent=self,
