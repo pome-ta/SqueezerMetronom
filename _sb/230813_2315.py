@@ -14,7 +14,7 @@ frame_interval: int = 1
 shows_fps: bool = True
 
 symbol_play = 'play.fill'
-symbol_stop = 'stop'
+symbol_stop = 'stop.fill'
 
 
 def configuration_by_applying_configuration(
@@ -25,7 +25,7 @@ def configuration_by_applying_configuration(
   return _conf
 
 
-def get_symbo_icon(symbol_name: str, point_size: float = 128.0) -> ui.Image:
+def get_symbo_icon(symbol_name: str, point_size: float = 256.0) -> ui.Image:
 
   size = UIImageSymbolConfiguration.configurationWithPointSize_(point_size)
   #color = UIImageSymbolConfiguration.configurationPreferringMulticolor()
@@ -36,6 +36,7 @@ def get_symbo_icon(symbol_name: str, point_size: float = 128.0) -> ui.Image:
 
   tint_color = UIColor.systemDarkGrayColor()
   tint_color = UIColor.tintColor()
+  tint_color = UIColor.whiteColor()
   '''
   case automatic = 0
   case alwaysOriginal = 1
@@ -44,14 +45,6 @@ def get_symbo_icon(symbol_name: str, point_size: float = 128.0) -> ui.Image:
 
   ui_image = UIImage.systemImageNamed_withConfiguration_(
     symbol_name, conf).imageWithTintColor_renderingMode_(tint_color, 1)
-  #imageWithTintColor_renderingMode_
-
-  #pdbg.state(UIColor)
-  pdbg.state(ui_image)
-  #ui_image.imageWithTintColor_renderingMode_(UIColor.systemDarkGrayColor(), 1)
-
-  #pdbg.state(ui_image)
-  #pdbg.state(UIColor.systemDarkGrayColor())
 
   png_bytes = uiimage_to_png(ui_image)
   png_img = ui.Image.from_data(png_bytes, 2)
@@ -65,9 +58,11 @@ class Canvas(scene.Scene):
     self.icon_wrap: scene.ShapeNode
     self.icon_sprite: scene.SpriteNode
 
-    _png_img = get_symbo_icon(symbol_play)
+    #_png_img = get_symbo_icon(symbol_play)
+    #_png_img = get_symbo_icon(symbol_stop)
 
     #_png_img = get_symbo_icon('cloud.sun.rain.fill')
+    _png_img = get_symbo_icon('cable.connector.horizontal')
     self.play_tex = scene.Texture(_png_img)
 
   def setup(self):
@@ -98,7 +93,7 @@ class Canvas(scene.Scene):
 
     self.icon_sprite.texture = self.play_tex
     self.icon_sprite.size = (o_size * 0.64, o_size * 0.64)
-    #self.icon_sprite.color = 'cyan'
+    self.icon_sprite.color = 'cyan'
 
   def __init_guide(self):
     self.guide = scene.ShapeNode(parent=self,
