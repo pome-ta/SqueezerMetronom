@@ -1,13 +1,17 @@
 import scene
 import ui
 
-from objc_util import ObjCClass
+from objc_util import ObjCClass, uiimage_to_png
 
 BEAT: int = 4
 
 frame_interval: int = 1
 shows_fps: bool = True
 
+
+UIImage = ObjCClass('UIImage')
+UIColor = ObjCClass('UIColor')
+UIImageSymbolConfiguration = ObjCClass('UIImageSymbolConfiguration')
 
 class Signal:
 
