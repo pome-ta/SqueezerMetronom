@@ -1,5 +1,5 @@
-from PIL import Image as ImageP
 from io import BytesIO
+from PIL import Image as ImageP
 
 import scene
 import ui
@@ -42,7 +42,7 @@ class SymbolIcon:
     height = self.uiimage.size().height
 
 
-def get_symbo_icon(symbol_name: str, point_size: float = 128.0) -> ui.Image:
+def get_symbo_icon(symbol_name: str, point_size: float = 512.0) -> ui.Image:
   conf: UIImageSymbolConfiguration
 
   conf = UIImageSymbolConfiguration.defaultConfiguration()
@@ -57,19 +57,24 @@ def get_symbo_icon(symbol_name: str, point_size: float = 128.0) -> ui.Image:
   ui_image = UIImage.systemImageNamed_withConfiguration_(symbol_name, conf)
 
   #pdbg.state(ui_image)
-  #to_png = uiimage_to_png(ui_image)
+  to_png = uiimage_to_png(ui_image)
   #print(to_png)
-  
+
   #re_img = ui.Image.from_data(to_png)
   #print(re_img)
-  newimg = ImageP.new('RGBA', (256,256))
-  newimg.
+  pil_img = ImageP.open(BytesIO(to_png))
+  #pil_img.thumbnail((128,128))
+  img_bytes = BytesIO()
+  pil_img.save(img_bytes, format='PNG')
+  img_bytes = img_bytes.getvalue()
+  png_img = ui.Image.from_data(img_bytes, 2)
+  #newimg.
 
   #iii = ImageP.frombytes('RGBA', (20, 20), to_png)
 
   #png_img = ui.Image.from_data(iii, 2)
   #png_img = ui.Image.from_data(to_png, 2)
-  #return png_img
+  return png_img
   '''
   with BytesIO() as bIO:
     iii.save(bIO, 'png')
@@ -119,7 +124,7 @@ class Canvas(scene.Scene):
     self.icon_wrap.position = self.size / 2
 
     self.icon_sprite.texture = self.play_tex
-    self.icon_sprite.size = (o_size, o_size)
+    #self.icon_sprite.size = (o_size, o_size)
 
   def __init_guide(self):
     self.guide = scene.ShapeNode(parent=self,
