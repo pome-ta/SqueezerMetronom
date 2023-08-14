@@ -131,15 +131,32 @@ class PlayButton(scene.Node):
     self.set_up()
 
   def set_up(self):
-    self.wrap = scene.ShapeNode(parent=self,
-                                fill_color='clear',
-                                stroke_color='clear')
-    self.circle = scene.ShapeNode(parent=self.wrap,
-                                  fill_color='clear',
-                                  stroke_color=TINT_COLOR)
-    self.icon_shape = scene.ShapeNode(parent=self.circle,
-                                      fill_color='clear',
-                                      stroke_color='clear')
+    wrap_kwargs = {
+      'parent': self,
+      'fill_color': 'clear',
+      'stroke_color': 'clear',
+    }
+    self.wrap = scene.ShapeNode(**wrap_kwargs)
+    #self.wrap = scene.ShapeNode(parent=self, fill_color='clear', stroke_color='clear')
+
+    circle_kwargs = {
+      'parent': self.wrap,
+      'fill_color': 'clear',
+      'stroke_color': TINT_COLOR,
+    }
+    self.circle = scene.ShapeNode(**circle_kwargs)
+
+    #self.circle = scene.ShapeNode(parent=self.wrap, fill_color='clear', stroke_color=TINT_COLOR)
+
+    icon_shape_kwargs = {
+      'parent': self.circle,
+      'fill_color': 'clear',
+      'stroke_color': 'clear',
+    }
+    self.icon_shape = scene.ShapeNode(**icon_shape_kwargs)
+
+    #self.icon_shape = scene.ShapeNode(parent=self.circle, fill_color='clear', stroke_color='clear')
+
     # xxx: debug
     self.wrap.stroke_color = 'cyan'
     #self.icon_shape.stroke_color = 'maroon'
