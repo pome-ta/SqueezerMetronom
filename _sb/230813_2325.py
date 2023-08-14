@@ -8,10 +8,20 @@ BEAT: int = 4
 frame_interval: int = 1
 shows_fps: bool = True
 
+TINT_COLOR = '#808080'
 
 UIImage = ObjCClass('UIImage')
 UIColor = ObjCClass('UIColor')
 UIImageSymbolConfiguration = ObjCClass('UIImageSymbolConfiguration')
+
+
+def configuration_by_applying_configuration(
+    applys: list) -> UIImageSymbolConfiguration:
+  _conf = UIImageSymbolConfiguration.defaultConfiguration()
+  for apply in applys:
+    _conf = _conf.configurationByApplyingConfiguration_(apply)
+  return _conf
+
 
 class Signal:
 
@@ -82,6 +92,51 @@ class ClickSound:
     pass
 
 
+class PlayButton(scene.Node):
+
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.wrap: scene.ShapeNode
+    self.circle: scene.ShapeNode
+    self.icon_shape: scene.ShapeNode
+    self.icon: scene.SpriteNode
+    self.play_texture: scene.Texture
+    self.stop_texture: scene.Texture
+    self.line_width: int = 4
+    self.set_up()
+
+  def set_up(self):
+    self.wrap = scene.ShapeNode(parent=self,
+                                fill_color='clear',
+                                stroke_color='clear')
+    self.__create_icon()
+    
+
+  def __create_icon(self):
+    
+    self.circle = scene.ShapeNode(parent=self.wrap,
+                                  fill_color='clear',
+                                  stroke_color=TINT_COLOR)
+    self.icon_shape = scene.ShapeNode(parent=self.circle,
+                                      fill_color='clear',
+                                      stroke_color='clear')
+    self.change_size_position()
+
+    
+
+  def change_size_position(self):
+    w, h = self.parent.size
+    pos_x = w / 2
+    pos_y = h / 2.5
+    wrap_w = wrap_h = min(w, h) / 4
+    self.wrap.path = ui.Path.rect(0, 0, wrap_w, wrap_h)
+    self.wrap.position = (pos_x, pos_y)
+    
+    circle_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
+    circle_path.line_width = self.line_width
+    self.circle.path = circle_path
+
+
 class Lamp(scene.Node):
 
   def __init__(self, *args, **kwargs):
@@ -91,15 +146,13 @@ class Lamp(scene.Node):
     self.dots: list
     self.line_width: int = 4
 
-    #color_tone = 'maroon'
-    color_tone = '#808080'
     self.active_is = {
-      'fill_color': color_tone,
-      'stroke_color': color_tone,
+      'fill_color': TINT_COLOR,
+      'stroke_color': TINT_COLOR,
     }
     self.deactive_is = {
       'fill_color': 'clear',
-      'stroke_color': color_tone,
+      'stroke_color': TINT_COLOR,
     }
 
     self.set_up()
@@ -157,24 +210,28 @@ class Canvas(scene.Scene):
     self.bpm = bpm
     self.beat: int = -1
     self.beat_index: int = 0
-    self.is_play: bool
+    self.is_play: bool = False
     self.past_play: bool
 
   def setup(self):
-
+    self.is_play = False
     self.signal = Signal(self.bpm)
     self.lamp = Lamp(parent=self)
+    self.play_botton = PlayButton(parent=self)
     self.feedback = Feedback()
 
     position = self.size / 2
 
     self.label_beat = scene.LabelNode(parent=self, position=position)
     self.label_beat.text = 'あ'
+    self.update_label()
 
   def update_label(self):
     self.label_beat.text = f'{self.bpm}\n{str(self.beat)}'
 
   def update(self):
+    if not (self.is_play):
+      return
     self.signal.increment_time(self.dt)
     if self.signal.is_pulse:
       self.beat += 1
@@ -190,6 +247,7 @@ class Canvas(scene.Scene):
     position = self.size / 2
     self.label_beat.position = position
     self.lamp.change_size_position()
+    self.play_botton.change_size_position()
 
 
 class View(ui.View):
