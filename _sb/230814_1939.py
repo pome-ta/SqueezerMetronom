@@ -321,9 +321,17 @@ class View(ui.View):
     self.bg_color = 0.88
     self.height_ratio: float = 0.96  # todo: safe area
 
+    csnvas_kwargs = {
+      'scene': scene_node,
+      'frame_interval': frame_interval,
+      'shows_fps': shows_fps,
+    }
+    '''
     self.canvas = scene.SceneView(scene=scene_node,
                                   frame_interval=frame_interval,
                                   shows_fps=shows_fps)
+    '''
+    self.canvas = scene.SceneView(**csnvas_kwargs)
     self.add_subview(self.canvas)
 
   def layout(self):
