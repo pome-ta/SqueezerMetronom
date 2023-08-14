@@ -1,5 +1,3 @@
-import math
-
 import scene
 import ui
 
@@ -139,11 +137,11 @@ class PlayButton(scene.Node):
     self.circle = scene.ShapeNode(parent=self.wrap,
                                   fill_color='clear',
                                   stroke_color=TINT_COLOR)
-    self.icon_shape = scene.ShapeNode(
-      parent=self.circle,
-      fill_color='clear',
-      #stroke_color='maroon'
-      stroke_color='clear')
+    self.icon_shape = scene.ShapeNode(parent=self.circle,
+                                      fill_color='clear',
+                                      stroke_color='maroon'
+                                      #stroke_color='clear'
+                                      )
     self.is_play = False
     self.__create_icon()
     self.change_size_position()
@@ -181,6 +179,7 @@ class PlayButton(scene.Node):
 
     #sq_size = min(self.circle.size)  # * 0.64
     sq_size = min(self.circle.size) / 2**0.5  # `sqrt(2)`
+    sq_size = min(self.circle.size) / pow(2, 0.5)
     self.icon_shape.path = ui.Path.rect(0, 0, sq_size, sq_size)
 
     selected_texture = self.play_texture if self.is_play else self.stop_texture
