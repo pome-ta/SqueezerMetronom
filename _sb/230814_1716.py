@@ -139,9 +139,10 @@ class PlayButton(scene.Node):
                                   stroke_color=TINT_COLOR)
     self.icon_shape = scene.ShapeNode(parent=self.circle,
                                       fill_color='clear',
-                                      stroke_color='maroon'
-                                      #stroke_color='clear'
-                                      )
+                                      stroke_color='clear')
+    # xxx: debug
+    #self.icon_shape.stroke_color = 'maroon'
+
     self.is_play = False
     self.__create_icon()
     self.change_size_position()
@@ -157,7 +158,7 @@ class PlayButton(scene.Node):
     self.stop_texture = scene.Texture(stop_symbo)
 
     self.icon = scene.SpriteNode(parent=self.icon_shape)
-    self.icon.color = 'cyan'
+    self.icon.color = TINT_COLOR
     self.select_icon()
 
   def select_icon(self):
@@ -299,7 +300,8 @@ class Canvas(scene.Scene):
 
   def did_change_size(self):
     position = self.size / 2
-    self.label_beat.position = position
+    _w, _h = self.size
+    self.label_beat.position = (_w / 2, _h / 1.25)
     self.lamp.change_size_position()
     self.play_botton.change_size_position()
 
