@@ -232,9 +232,14 @@ class Lamp(scene.Node):
     self.set_up()
 
   def set_up(self):
-    self.wrap = scene.ShapeNode(parent=self,
-                                fill_color='clear',
-                                stroke_color='clear')
+    wrap_kwargs = {
+      'parent': self,
+      'fill_color': 'clear',
+      'stroke_color': 'clear',
+    }
+    self.wrap = scene.ShapeNode(**wrap_kwargs)
+    #self.wrap = scene.ShapeNode(parent=self, fill_color='clear', stroke_color='clear')
+
     self.dots = [self.__create_dot() for _ in range(BEAT)]
 
     self.change_size_position()
@@ -343,12 +348,9 @@ class View(ui.View):
       'frame_interval': frame_interval,
       'shows_fps': shows_fps,
     }
-    '''
-    self.canvas = scene.SceneView(scene=scene_node,
-                                  frame_interval=frame_interval,
-                                  shows_fps=shows_fps)
-    '''
     self.canvas = scene.SceneView(**csnvas_kwargs)
+    #self.canvas = scene.SceneView(scene=scene_node, frame_interval=frame_interval, shows_fps=shows_fps)
+
     self.add_subview(self.canvas)
 
   def layout(self):
