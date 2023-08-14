@@ -137,9 +137,11 @@ class PlayButton(scene.Node):
     self.circle = scene.ShapeNode(parent=self.wrap,
                                   fill_color='clear',
                                   stroke_color=TINT_COLOR)
-    self.icon_shape = scene.ShapeNode(parent=self.circle,
-                                      fill_color='clear',
-                                      stroke_color='maroon')
+    self.icon_shape = scene.ShapeNode(
+      parent=self.circle,
+      fill_color='clear',
+      #stroke_color='maroon'
+      stroke_color='clear')
     self.is_play = False
     self.__create_icon()
     self.change_size_position()
@@ -147,8 +149,12 @@ class PlayButton(scene.Node):
   def __create_icon(self):
     play_symbo = get_symbo_icon('play.fill')
     stop_symbo = get_symbo_icon('stop.fill')
+    #stop_symbo = get_symbo_icon('cable.connector.horizontal')
+    stop_symbo = get_symbo_icon('cable.connector')
+
     self.play_texture = scene.Texture(play_symbo)
     self.stop_texture = scene.Texture(stop_symbo)
+
     self.icon = scene.SpriteNode(parent=self.icon_shape)
     self.icon.color = 'cyan'
     self.select_icon()
@@ -170,11 +176,15 @@ class PlayButton(scene.Node):
     circle_path.line_width = self.line_width
     self.circle.path = circle_path
 
-    #self.icon_shape.path = ui.Path.rect(0,0,self.circle.size/2)
-    #print(self.circle.size)
+    sq_size = min(self.circle.size)  # * 0.64
+    self.icon_shape.path = ui.Path.rect(0, 0, sq_size, sq_size)
 
     selected_texture = self.play_texture if self.is_play else self.stop_texture
-    t_w, t_h = selected_texture.size / 2
+    t_w, t_h = selected_texture.size
+    asp = sq_size / max(t_w, t_h)
+    self.icon.texture = selected_texture
+    self.icon.size = (t_w * asp, t_h * asp)
+
     #print(t_w)
 
 
