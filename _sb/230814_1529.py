@@ -23,6 +23,29 @@ def configuration_by_applying_configuration(
   return _conf
 
 
+def get_symbo_icon(symbol_name: str, point_size: float = 256.0) -> ui.Image:
+
+  size = UIImageSymbolConfiguration.configurationWithPointSize_(point_size)
+  color = UIImageSymbolConfiguration.configurationPreferringMonochrome()
+
+  conf = configuration_by_applying_configuration([size, color])
+
+  # todo: `scene.Texture` で着色
+  tint_color = UIColor.whiteColor()
+  '''
+  case automatic = 0
+  case alwaysOriginal = 1
+  case alwaysTemplate = 2
+  '''
+
+  ui_image = UIImage.systemImageNamed_withConfiguration_(
+    symbol_name, conf).imageWithTintColor_renderingMode_(tint_color, 1)
+
+  png_bytes = uiimage_to_png(ui_image)
+  png_img = ui.Image.from_data(png_bytes, 2)
+  return png_img
+
+
 class Signal:
 
   def __init__(self, bpm: float = 120.0, beat: int = 4):
@@ -102,6 +125,8 @@ class PlayButton(scene.Node):
     self.icon: scene.SpriteNode
     self.play_texture: scene.Texture
     self.stop_texture: scene.Texture
+
+    self.is_play: bool = False
     self.line_width: int = 4
     self.set_up()
 
@@ -109,20 +134,29 @@ class PlayButton(scene.Node):
     self.wrap = scene.ShapeNode(parent=self,
                                 fill_color='clear',
                                 stroke_color='clear')
-    self.__create_icon()
-    
-
-  def __create_icon(self):
-    
     self.circle = scene.ShapeNode(parent=self.wrap,
                                   fill_color='clear',
                                   stroke_color=TINT_COLOR)
     self.icon_shape = scene.ShapeNode(parent=self.circle,
                                       fill_color='clear',
-                                      stroke_color='clear')
+                                      stroke_color='maroon')
+    self.is_play = False
+    self.__create_icon()
     self.change_size_position()
 
-    
+  def __create_icon(self):
+    play_symbo = get_symbo_icon('play.fill')
+    stop_symbo = get_symbo_icon('stop.fill')
+    self.play_texture = scene.Texture(play_symbo)
+    self.stop_texture = scene.Texture(stop_symbo)
+    self.icon = scene.SpriteNode(parent=self.icon_shape)
+    self.icon.color = 'cyan'
+    self.select_icon()
+
+  def select_icon(self):
+    # xxx: `@property` するか？
+    selected_texture = self.play_texture if self.is_play else self.stop_texture
+    self.icon.texture = selected_texture
 
   def change_size_position(self):
     w, h = self.parent.size
@@ -131,10 +165,17 @@ class PlayButton(scene.Node):
     wrap_w = wrap_h = min(w, h) / 2
     self.wrap.path = ui.Path.rect(0, 0, wrap_w, wrap_h)
     self.wrap.position = (pos_x, pos_y)
-    
-    circle_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
+
+    circle_path = ui.Path.oval(0, 0, wrap_w, wrap_h)
     circle_path.line_width = self.line_width
     self.circle.path = circle_path
+
+    #self.icon_shape.path = ui.Path.rect(0,0,self.circle.size/2)
+    #print(self.circle.size)
+
+    selected_texture = self.play_texture if self.is_play else self.stop_texture
+    t_w, t_h = selected_texture.size / 2
+    #print(t_w)
 
 
 class Lamp(scene.Node):
