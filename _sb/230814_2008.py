@@ -176,8 +176,12 @@ class PlayButton(scene.Node):
 
   def select_icon(self):
     # xxx: `@property` するか？
+    print(self.is_play)
     selected_texture = self.play_texture if self.is_play else self.stop_texture
     self.icon.texture = selected_texture
+
+  def is_touch(self, point) -> bool:
+    return self.wrap.frame.contains_point(point)
 
   def change_size_position(self):
     w, h = self.parent.size
@@ -313,11 +317,16 @@ class Canvas(scene.Scene):
     pass
 
   def touch_began(self, touch):
-    self.is_play = not (self.is_play)
-    if self.is_play:
-      self.signal.reset()
-      self.beat = -1
-      self.beat_index = 0
+    _point = touch.location
+    if self.play_botton.is_touch(_point):
+      self.is_play = not (self.is_play)
+      if self.is_play:
+        self.signal.reset()
+        self.beat = -1
+        self.beat_index = 0
+        self.play_botton.is_play = self.is_play
+        self.play_botton.select_icon()
+        self.play_botton.change_size_position()
 
   def did_change_size(self):
     position = self.size / 2
