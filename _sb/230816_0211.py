@@ -122,15 +122,15 @@ class PlayButton(scene.Node):
     super().__init__(*args, **kwargs)
     self.wrap: scene.ShapeNode
     self.circle: scene.ShapeNode
-    
+
     self.icon_shape: scene.ShapeNode
     self.icon: scene.SpriteNode
-    
+
     self.play_texture: scene.Texture
     self.stop_texture: scene.Texture
+    self.select_texture: scene.Texture
 
-    self.is_play: bool = False
-    self.line_width: int = 8
+    self.line_width: int = 4
     self.__set_up()
 
   def __set_up(self):
@@ -159,27 +159,30 @@ class PlayButton(scene.Node):
     self.wrap.stroke_color = 'cyan'
     self.icon_shape.stroke_color = 'maroon'
 
-    self.is_play = False
     self.__create_icon()
     self.change_size_position()
 
   def __create_icon(self):
-    play_symbo = get_symbo_icon('play.fill')
-    stop_symbo = get_symbo_icon('stop.fill')
+    #play.circle
+    #play_symbo = get_symbo_icon('play.circle')
+    #stop_symbo = get_symbo_icon('stop.circle')
+    play_symbo = get_symbo_icon('play.circle.fill')
+    stop_symbo = get_symbo_icon('stop.circle.fill')
+
+    #play_symbo = get_symbo_icon('play.fill')
+    #stop_symbo = get_symbo_icon('stop.fill')
 
     self.play_texture = scene.Texture(play_symbo)
     self.stop_texture = scene.Texture(stop_symbo)
 
     self.icon = scene.SpriteNode(parent=self.icon_shape)
     self.icon.color = TINT_COLOR
-    self.select_icon()
+    self.up_date(False)
 
-  def select_icon(self):
-    # xxx: `@property` するか？
-    #print(self.is_play)
-    selected_texture = self.stop_texture if self.is_play else self.play_texture
-    #print(selected_texture)
-    self.icon.texture = selected_texture
+  def up_date(self, is_play):
+    self.select_texture = self.stop_texture if is_play else self.play_texture
+    self.icon.texture = self.select_texture
+    self.change_size_position()
 
   def is_touch(self, point) -> bool:
     return self.wrap.frame.contains_point(point)
@@ -188,7 +191,11 @@ class PlayButton(scene.Node):
     w, h = self.parent.size
     pos_x = w / 2
     pos_y = h / 2.5
+
+    # todo: 最終的なボタンのサイズを確定
+    # xxx: ここでええんか？
     wrap_w = wrap_h = min(w, h) / 2
+
     self.wrap.path = ui.Path.rect(0, 0, wrap_w, wrap_h)
     self.wrap.position = (pos_x, pos_y)
 
@@ -200,10 +207,8 @@ class PlayButton(scene.Node):
     sq_size = min(self.circle.size) / pow(2, 0.5)
     self.icon_shape.path = ui.Path.rect(0, 0, sq_size, sq_size)
 
-    selected_texture = self.stop_texture if self.is_play else self.play_texture
-    t_w, t_h = selected_texture.size
+    t_w, t_h = self.select_texture.size
     asp = sq_size / max(t_w, t_h)
-    self.icon.texture = selected_texture
     self.icon.size = (t_w * asp, t_h * asp)
 
 
@@ -320,10 +325,8 @@ class Canvas(scene.Scene):
   def touch_began(self, touch):
     _point = touch.location
     if self.play_botton.is_touch(_point):
-      self.play_botton.is_play = self.is_play
-      self.play_botton.select_icon()
-      self.play_botton.change_size_position()
       self.is_play = not (self.is_play)
+      self.play_botton.up_date(self.is_play)
 
       if self.is_play:
         self.signal.reset()
@@ -361,7 +364,7 @@ class View(ui.View):
 if __name__ == '__main__':
   beats_per_minute: float = 112.0
   canvas = Canvas(beats_per_minute)
-  
+
   view = View(scene_node=canvas)
   view.present(style='fullscreen', orientations=['portrait'])
   #view.present(style='fullscreen')
