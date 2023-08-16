@@ -261,11 +261,12 @@ class Lamp(scene.Node):
       dot.position = (_x, 0.0)
 
 
-class Canvas(scene.Scene):
+class MetronomScene(scene.Scene):
 
-  def __init__(self, bpm: float = 120.0, *args, **kwargs):
+  def __init__(self, bpm: float = 120.0, note: int = 4, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.bpm = bpm
+    self.note = note
     self.beat: int = -1
     self.beat_index: int = 0
     self.is_play: bool = False
@@ -340,10 +341,12 @@ class View(ui.View):
 
 
 if __name__ == '__main__':
-  beats_per_minute: float = 112.0
-  canvas = Canvas(beats_per_minute)
+  BPM: float = 112.0
+  NOTE: int = 4
 
-  view = View(scene_node=canvas)
+  metronom_scene = MetronomScene(BPM)
+
+  view = View(scene_node=metronom_scene)
   view.present(style='fullscreen', orientations=['portrait'])
   #view.present(style='fullscreen')
 
