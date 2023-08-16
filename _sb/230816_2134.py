@@ -48,8 +48,8 @@ def get_symbo_icon(symbol_name: str, point_size: float = 256.0) -> ui.Image:
 class Signal:
 
   def __init__(self, bpm: float = 120.0, beat: int = 4):
-    self.bpm: float = bpm
-    self.beat: int = beat  # xxx: 拍数 ?
+    self.bpm = bpm
+    self.beat = beat  # xxx: 拍数 ?
 
     self.stock_time: float  # todo: 経過時間加算
     self.past_pulse: int  # todo:
