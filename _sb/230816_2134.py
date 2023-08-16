@@ -47,9 +47,9 @@ def get_symbo_icon(symbol_name: str, point_size: float = 256.0) -> ui.Image:
 
 class Signal:
 
-  def __init__(self, bpm: float = 120.0, beat: int = 4):
+  def __init__(self, bpm: float = 120.0, note: int = 4):
     self.bpm = bpm
-    self.beat = beat  # xxx: 拍数 ?
+    self.note = note  # xxx: 拍数 ?
 
     self.stock_time: float  # todo: 経過時間加算
     self.past_pulse: int  # todo:
@@ -61,7 +61,7 @@ class Signal:
     self.past_pulse = -1
 
     sec = self.bpm / 60
-    step = 4 / self.beat  # 拍子対応
+    step = 4 / self.note  # 拍子対応
     self.mul_num = sec / step
 
   def increment_time(self, dt: float):
@@ -75,8 +75,8 @@ class Signal:
           8分音符なら8分音符のタイミング(BPM の2倍)
     """
 
-    beat_time = int(self.stock_time)
-    if beat_time != self.past_pulse:
+    note_time = int(self.stock_time)
+    if note_time != self.past_pulse:
       # xxx: 加算の意味あまりない ? 調整したい
       # xxx: `int` 溢れの可能性ある
       self.past_pulse += 1
@@ -147,7 +147,7 @@ class PlayButton(scene.Node):
     }
     self.wrap = scene.ShapeNode(**wrap_kwargs)
 
-    # xxx: debug
+    # todo: debug
     self.wrap.stroke_color = 'cyan'
 
     self.__create_icon()
@@ -219,7 +219,9 @@ class Lamp(scene.Node):
     }
     self.wrap = scene.ShapeNode(**wrap_kwargs)
 
-    self.dots = [self.__create_dot() for _ in range(BEAT)]
+    self.dot_matrix = [[self.__create_dot() for _ in range(4)]
+                       for _ in range(4)]
+    self.dots = [self.__create_dot() for _ in range(4)]
 
     self.change_size_position()
     self.update_status(0)
@@ -248,6 +250,9 @@ class Lamp(scene.Node):
     self.wrap.path = ui.Path.rect(0, 0, wrap_w, wrap_h)
     self.wrap.position = (pos_x, pos_y)
 
+    # todo: debug
+    self.wrap.stroke_color = 'cyan'
+
     oval_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
     oval_path.line_width = self.line_width
 
@@ -259,6 +264,13 @@ class Lamp(scene.Node):
       _x = (span * n) - st_point
       dot.path = oval_path
       dot.position = (_x, 0.0)
+
+    for r, rows in enumerate(self.dot_matrix):
+      _x = (span * r) - st_point
+      for c, dot in enumerate(rows):
+        _y = c * ovals_w
+        dot.path = oval_path
+        dot.position = (_x, _y)
 
 
 class MetronomScene(scene.Scene):
