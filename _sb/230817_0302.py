@@ -155,9 +155,9 @@ class PlayButton(scene.Node):
 
   def __create_icon(self):
     #play_symbo = get_symbo_icon('play.circle.fill')
-    #play_symbo = get_symbo_icon('cable.connector.horizontal')
-    play_symbo = get_symbo_icon('cable.connector')
-    
+    play_symbo = get_symbo_icon('cable.connector.horizontal')
+    #play_symbo = get_symbo_icon('cable.connector')
+
     stop_symbo = get_symbo_icon('stop.circle.fill')
 
     self.play_texture = scene.Texture(play_symbo)
@@ -178,7 +178,7 @@ class PlayButton(scene.Node):
   def change_size_position(self):
     w, h = self.parent.size
     pos_x = w / 2
-    pos_y = h / 2.5
+    pos_y = h / 4
 
     # 最終的なボタンのサイズを確定
     # xxx: ここでええんか？
@@ -187,8 +187,7 @@ class PlayButton(scene.Node):
     self.wrap.path = ui.Path.rect(0, 0, wrap_w, wrap_h)
     self.wrap.position = (pos_x, pos_y)
 
-    # 正円に接する正四角形の長さ `sqrt(2)`
-    sq_size = min(self.wrap.size) * pow(2, 0.5)
+    sq_size = min(self.wrap.size)
     t_w, t_h = self.select_texture.size
     asp = sq_size / max(t_w, t_h)
     self.icon.size = (t_w * asp, t_h * asp)
@@ -332,9 +331,8 @@ class MetronomScene(scene.Scene):
         self.beat_index = 0
 
   def did_change_size(self):
-    position = self.size / 2
     _w, _h = self.size
-    self.label_beat.position = (_w / 2, _h / 1.25)
+    self.label_beat.position = (_w / 2, _h / 2.5)
     self.lamp.change_size_position()
     self.play_botton.change_size_position()
 
