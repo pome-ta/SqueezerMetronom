@@ -66,7 +66,14 @@ class Signal:
 
   @property
   def is_pulse(self) -> bool:
+    """
+    起点として発信(True) する
+    note: BPM 起点ではなく、アクションさせたいベース
+          8分音符なら8分音符のタイミング(BPM の2倍)
+    """
+
     beat_time = int(self.stock_time)
+    #print(beat_time)
     if beat_time != self.past_pulse:
       self.past_pulse += 1  # xxx: 加算の意味あまりない ? 調整したい
       return True
@@ -260,7 +267,6 @@ class Canvas(scene.Scene):
     self.beat: int = -1
     self.beat_index: int = 0
     self.is_play: bool = False
-    
 
   def setup(self):
     self.is_play = False
