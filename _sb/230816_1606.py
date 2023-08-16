@@ -30,7 +30,7 @@ def get_symbo_icon(symbol_name: str, point_size: float = 256.0) -> ui.Image:
 
   conf = __configuration_by_applying_configuration([size, color])
 
-  # todo: `scene.Texture` で着色
+  # todo: `scene.Texture` で着色するため白色を指定
   tint_color = UIColor.whiteColor()
   '''
   case automatic = 0
@@ -52,8 +52,8 @@ class Signal:
     self.beat: int = beat  # xxx: 拍数 ?
 
     self.stock_time: float  # todo: 経過時間加算
-    self.past_pulse: int  # 
-    self.mul_num: float
+    self.past_pulse: int  # todo:
+    self.mul_num: float  # todo:
     self.reset()
 
   def reset(self):
@@ -73,9 +73,10 @@ class Signal:
     """
 
     beat_time = int(self.stock_time)
-    #print(beat_time)
     if beat_time != self.past_pulse:
-      self.past_pulse += 1  # xxx: 加算の意味あまりない ? 調整したい
+      # xxx: 加算の意味あまりない ? 調整したい
+      # xxx: `int` 溢れの可能性ある
+      self.past_pulse += 1
       return True
     else:
       return False
