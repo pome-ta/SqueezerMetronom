@@ -154,7 +154,10 @@ class PlayButton(scene.Node):
     self.change_size_position()
 
   def __create_icon(self):
-    play_symbo = get_symbo_icon('play.circle.fill')
+    #play_symbo = get_symbo_icon('play.circle.fill')
+    #play_symbo = get_symbo_icon('cable.connector.horizontal')
+    play_symbo = get_symbo_icon('cable.connector')
+    
     stop_symbo = get_symbo_icon('stop.circle.fill')
 
     self.play_texture = scene.Texture(play_symbo)
@@ -198,6 +201,8 @@ class Lamp(scene.Node):
 
     self.wrap: scene.ShapeNode
     self.dots: list
+    self.dot_matrix: list[list[scene.ShapeNode, ]]
+
     self.line_width: int = 4
 
     self.active_is = {
@@ -218,19 +223,22 @@ class Lamp(scene.Node):
       'stroke_color': 'clear',
     }
     self.wrap = scene.ShapeNode(**wrap_kwargs)
+    # todo: debug
+    self.wrap.stroke_color = 'cyan'
 
     self.dot_matrix = [[self.__create_dot() for _ in range(4)]
                        for _ in range(4)]
     self.dots = [self.__create_dot() for _ in range(4)]
 
     self.change_size_position()
-    self.update_status(0)
+    #self.update_status(0)
 
   def __create_dot(self) -> scene.ShapeNode:
     shape_node = scene.ShapeNode(parent=self.wrap)
     return shape_node
 
   def update_status(self, active_index: int):
+    # todo: 全部書き換えるより、前回のindex と今回のindex のみ処理をする？
     for n, dot in enumerate(self.dots):
       if n == active_index:
         dot.fill_color = self.active_is['fill_color']
@@ -244,14 +252,12 @@ class Lamp(scene.Node):
 
     pos_x = w / 2
     pos_y = h / 1.5
-    wrap_w = min(w, h) / 1.5
-    wrap_h = max(w, h) / 24
+    wrap_w = wrap_h = min(w, h) / 1.5
+    #wrap_h = max(w, h) / 24
 
     self.wrap.path = ui.Path.rect(0, 0, wrap_w, wrap_h)
     self.wrap.position = (pos_x, pos_y)
-
-    # todo: debug
-    self.wrap.stroke_color = 'cyan'
+    '''
 
     oval_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
     oval_path.line_width = self.line_width
@@ -271,6 +277,7 @@ class Lamp(scene.Node):
         _x = (span * c) - st_point
         dot.path = oval_path
         dot.position = (_x, _y)
+    '''
 
 
 class MetronomScene(scene.Scene):
@@ -307,7 +314,7 @@ class MetronomScene(scene.Scene):
       self.beat += 1
       self.beat_index = self.beat % BEAT
       self.update_label()
-      self.lamp.update_status(self.beat_index)
+      #self.lamp.update_status(self.beat_index)
       self.feedback.weak if self.beat_index else self.feedback.strong
 
   def did_evaluate_actions(self):
