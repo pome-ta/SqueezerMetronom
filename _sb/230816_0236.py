@@ -40,7 +40,6 @@ def get_symbo_icon(symbol_name: str, point_size: float = 256.0) -> ui.Image:
 
   ui_image = UIImage.systemImageNamed_withConfiguration_(
     symbol_name, conf).imageWithTintColor_renderingMode_(tint_color, 1)
-
   png_bytes = uiimage_to_png(ui_image)
   png_img = ui.Image.from_data(png_bytes, 2)
   return png_img
@@ -127,7 +126,6 @@ class PlayButton(scene.Node):
     self.stop_texture: scene.Texture
     self.select_texture: scene.Texture
 
-    self.line_width: int = 4
     self.__set_up()
 
   def __set_up(self):
@@ -139,7 +137,7 @@ class PlayButton(scene.Node):
     self.wrap = scene.ShapeNode(**wrap_kwargs)
 
     # xxx: debug
-    #self.wrap.stroke_color = 'cyan'
+    self.wrap.stroke_color = 'cyan'
 
     self.__create_icon()
     self.change_size_position()
@@ -262,7 +260,7 @@ class Canvas(scene.Scene):
     self.beat: int = -1
     self.beat_index: int = 0
     self.is_play: bool = False
-    self.past_play: bool  # xxx: なんだけっけこれ
+    
 
   def setup(self):
     self.is_play = False
