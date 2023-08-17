@@ -225,7 +225,7 @@ class Lamp(scene.Node):
     }
     self.wrap = scene.ShapeNode(**wrap_kwargs)
     # todo: debug
-    self.wrap.stroke_color = 'cyan'
+    #self.wrap.stroke_color = 'cyan'
 
     _f = self.__create_dot
     self.dot_matrix = [[_f() for _ in range(4)] for _ in range(4)]
