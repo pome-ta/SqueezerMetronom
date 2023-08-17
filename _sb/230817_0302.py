@@ -162,6 +162,7 @@ class PlayButton(scene.Node):
 
     self.play_texture = scene.Texture(play_symbo)
     self.stop_texture = scene.Texture(stop_symbo)
+    self.select_texture = None
 
     self.icon = scene.SpriteNode(parent=self.wrap)
     self.icon.color = TINT_COLOR
@@ -177,12 +178,12 @@ class PlayButton(scene.Node):
 
   def change_size_position(self):
     w, h = self.parent.size
-    pos_x = w / 2
-    pos_y = h / 4
 
     # 最終的なボタンのサイズを確定
     # xxx: ここでええんか？
     wrap_w = wrap_h = min(w, h) / 4
+    pos_x = w / 2
+    pos_y = h / 4
 
     self.wrap.path = ui.Path.rect(0, 0, wrap_w, wrap_h)
     self.wrap.position = (pos_x, pos_y)
