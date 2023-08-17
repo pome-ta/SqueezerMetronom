@@ -253,7 +253,7 @@ class Lamp(scene.Node):
 
     pos_x = w / 2
     pos_y = h / 1.5
-    sq_wrap = min(w, h) / 3
+    sq_wrap = min(w, h) / 2
     #wrap_h = max(w, h) / 24
 
     self.wrap.path = ui.Path.rect(0, 0, sq_wrap, sq_wrap)
@@ -261,9 +261,9 @@ class Lamp(scene.Node):
 
     sq_guide = sq_wrap / 4
     # xxx: 長方形対応も考える
-    sq_oval = sq_guide * 0.64
+    sq_oval = sq_guide   * 0.64
 
-    offset = sq_wrap
+    offset = (sq_wrap / 2) - (sq_wrap / 8)
 
     oval_path = ui.Path.oval(0, 0, sq_oval, sq_oval)
     oval_path.line_width = self.line_width
@@ -271,8 +271,8 @@ class Lamp(scene.Node):
     for ri, rows in enumerate(self.dot_matrix):
       for ci, dot in enumerate(rows):
         dot.path = oval_path
-        x = sq_guide * ri
-        y = sq_guide * ci
+        x = sq_guide * ri - offset
+        y = sq_guide * ci - offset
         dot.position = (x, -y)
     '''
     oval_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
