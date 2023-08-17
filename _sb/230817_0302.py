@@ -261,7 +261,7 @@ class Lamp(scene.Node):
 
     sq_guide = sq_wrap / 4
     # xxx: 長方形対応も考える
-    sq_oval = sq_guide   * 0.64
+    sq_oval = sq_guide * 0.64
 
     offset = (sq_wrap / 2) - (sq_wrap / 8)
 
