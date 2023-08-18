@@ -226,7 +226,7 @@ class Lamp(scene.Node):
     }
     self.wrap = scene.ShapeNode(**wrap_kwargs)
     # todo: debug
-    #self.wrap.stroke_color = 'cyan'
+    self.wrap.stroke_color = 'cyan'
 
     _f = self.__create_dot  # xxx: バットマナー
     self.dot_matrix = [[_f() for _ in range(4)] for _ in range(4)]
@@ -251,15 +251,6 @@ class Lamp(scene.Node):
         else:
           dot.fill_color = self.deactive_is['fill_color']
           dot.stroke_color = self.deactive_is['stroke_color']
-    '''
-    for n, dot in enumerate(self.dots):
-      if n == active_index:
-        dot.fill_color = self.active_is['fill_color']
-        dot.stroke_color = self.active_is['stroke_color']
-      else:
-        dot.fill_color = self.deactive_is['fill_color']
-        dot.stroke_color = self.deactive_is['stroke_color']
-    '''
 
   def change_size_position(self):
     w, h = self.parent.size
@@ -291,45 +282,18 @@ class Lamp(scene.Node):
 
     cntr = 0
     stps = 1 / 16
+    print('')
     for xi, rows in enumerate(self.dot_matrix):
       for yi, dot in enumerate(rows):
         dot.path = oval_path
         dot.fill_color = cntr
         cntr += stps
         x = guide_w * xi - offset_w
+        print(guide_w)
+        print(offset_w)
+        print('__')
         y = guide_h * yi - offset_h
-        dot.position = (x, -y)
-    '''
-    oval_path = ui.Path.oval(0, 0, sq_oval, sq_oval)
-    oval_path.line_width = self.line_width
-
-    for ri, rows in enumerate(self.dot_matrix):
-      for ci, dot in enumerate(rows):
-        dot.path = oval_path
-        x = sq_guide * ri - offset
-        y = sq_guide * ci - offset
-        dot.position = (x, -y)
-    '''
-    '''
-    oval_path = ui.Path.oval(0, 0, wrap_h, wrap_h)
-    oval_path.line_width = self.line_width
-
-    ovals_w = wrap_w - wrap_h - (self.line_width / 2)
-    span = ovals_w / (BEAT - 1)
-    st_point = ovals_w / 2
-
-    for n, dot in enumerate(self.dots):
-      _x = (span * n) - st_point
-      dot.path = oval_path
-      dot.position = (_x, 0.0)
-
-    for r, rows in enumerate(self.dot_matrix):
-      _y = -(r * wrap_h)
-      for c, dot in enumerate(rows):
-        _x = (span * c) - st_point
-        dot.path = oval_path
-        dot.position = (_x, _y)
-    '''
+        dot.position = (x, y)
 
 
 class MetronomScene(scene.Scene):
@@ -418,5 +382,6 @@ if __name__ == '__main__':
 
   view = View(scene_node=metronom_scene)
   view.present(style='fullscreen', orientations=['portrait'])
+  aaa = metronom_scene.lamp.dot_matrix
   #view.present(style='fullscreen')
 
