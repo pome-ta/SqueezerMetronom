@@ -228,9 +228,8 @@ class Lamp(scene.Node):
     # todo: debug
     self.wrap.stroke_color = 'cyan'
 
-    _f = self.__create_dot  # xxx: バットマナー
+    _f = self.__create_dot  # xxx: バットマナー!
     self.dot_matrix = [[_f() for _ in range(4)] for _ in range(4)]
-    #self.dots = [self.__create_dot() for _ in range(4)]
 
     self.change_size_position()
     #self.update_status(0)
