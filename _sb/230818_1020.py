@@ -253,6 +253,9 @@ class Lamp(scene.Node):
 
   def change_size_position(self):
     w, h = self.parent.size
+    
+    self.aaa = scene.Size(2, 1.5)
+    print(self.aaa)
 
     pos_x = w / 2
     pos_y = h / 1.5
@@ -281,16 +284,16 @@ class Lamp(scene.Node):
 
     cntr = 0
     stps = 1 / 16
-    print('')
+    #print('')
     for xi, rows in enumerate(self.dot_matrix):
       for yi, dot in enumerate(rows):
         dot.path = oval_path
         dot.fill_color = cntr
         cntr += stps
         x = guide_w * xi - offset_w
-        print(guide_w)
-        print(offset_w)
-        print('__')
+        #print(guide_w)
+        #print(offset_w)
+        #print('__')
         y = guide_h * yi - offset_h
         dot.position = (x, y)
 
