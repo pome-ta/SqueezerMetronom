@@ -154,8 +154,9 @@ class PlayButton(scene.Node):
     self.change_size_position()
 
   def __create_icon(self):
-    #play_symbo = get_symbo_icon('play.circle.fill')
-    play_symbo = get_symbo_icon('cable.connector.horizontal')
+    play_symbo = get_symbo_icon('play.circle.fill')
+
+    #play_symbo = get_symbo_icon('cable.connector.horizontal')
     #play_symbo = get_symbo_icon('cable.connector')
 
     stop_symbo = get_symbo_icon('stop.circle.fill')
@@ -201,7 +202,7 @@ class Lamp(scene.Node):
     super().__init__(*args, **kwargs)
 
     self.wrap: scene.ShapeNode
-    self.dots: list
+    #self.dots: list
     self.dot_matrix: list[list[scene.ShapeNode, ]]
 
     self.line_width: int = 4
@@ -229,10 +230,10 @@ class Lamp(scene.Node):
 
     _f = self.__create_dot  # xxx: バットマナー
     self.dot_matrix = [[_f() for _ in range(4)] for _ in range(4)]
-    self.dots = [self.__create_dot() for _ in range(4)]
+    #self.dots = [self.__create_dot() for _ in range(4)]
 
     self.change_size_position()
-    self.update_status(0)
+    #self.update_status(0)
 
   def __create_dot(self) -> scene.ShapeNode:
     shape_node = scene.ShapeNode(parent=self.wrap)
@@ -288,11 +289,15 @@ class Lamp(scene.Node):
     oval_path = ui.Path.oval(0, 0, oval_sq, oval_sq)
     oval_path.line_width = self.line_width
 
-    for ci, clms in enumerate(self.dot_matrix):
-      for ri, dot in enumerate(clms):
+    cntr = 0
+    stps = 1 / 16
+    for xi, rows in enumerate(self.dot_matrix):
+      for yi, dot in enumerate(rows):
         dot.path = oval_path
-        x = guide_w * ri - offset_w
-        y = guide_h * ci - offset_h
+        dot.fill_color = cntr
+        cntr += stps
+        x = guide_w * xi - offset_w
+        y = guide_h * yi - offset_h
         dot.position = (x, -y)
     '''
     oval_path = ui.Path.oval(0, 0, sq_oval, sq_oval)
@@ -361,7 +366,7 @@ class MetronomScene(scene.Scene):
       self.beat += 1
       self.beat_index = self.beat % BEAT
       self.update_label()
-      self.lamp.update_status(self.beat)
+      #self.lamp.update_status(self.beat)
       self.feedback.weak if self.beat_index else self.feedback.strong
 
   def did_evaluate_actions(self):
