@@ -179,13 +179,10 @@ class PlayButton(scene.Node):
     return self.wrap.frame.contains_point(point)
 
   def change_size_position(self):
-    w, h = self.parent.size
-
     # 最終的なボタンのサイズを確定
     # xxx: ここでええんか？
-    wrap_w = wrap_h = min(w, h) / 4
-    pos_x = w / 2
-    pos_y = h / 4
+    wrap_w = wrap_h = min(self.parent.size) / 4
+    pos_x, pos_y = self.parent.size * scene.Size(1 / 2, 1 / 4)
 
     self.wrap.path = ui.Path.rect(0, 0, wrap_w, wrap_h)
     self.wrap.position = (pos_x, pos_y)
@@ -202,7 +199,6 @@ class Lamp(scene.Node):
     super().__init__(*args, **kwargs)
 
     self.wrap: scene.ShapeNode
-    #self.dots: list
     self.dot_matrix: list[list[scene.ShapeNode, ]]
 
     self.line_width: int = 4
