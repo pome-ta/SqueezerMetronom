@@ -256,11 +256,6 @@ class Lamp(scene.Node):
     self.wrap.path = ui.Path.rect(0, 0, wrap_w, wrap_h)
     self.wrap.position = (pos_x, pos_y)
 
-    sq_guide = sq_wrap / 4
-    # xxx: 長方形対応も考える
-    sq_oval = sq_guide * 0.64
-    offset = (sq_wrap / 2) - (sq_wrap / 8)
-
     guide_w = wrap_w / 4
     guide_h = wrap_h / 4
     offset_w = (wrap_w / 2) - (wrap_w / 8)
@@ -283,7 +278,7 @@ class Lamp(scene.Node):
         #print(offset_w)
         #print('__')
         y = guide_h * yi - offset_h
-        dot.position = (x, y)
+        dot.position = (cntr * offset_w, 0)
 
 
 class MetronomScene(scene.Scene):
