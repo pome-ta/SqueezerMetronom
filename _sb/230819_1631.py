@@ -303,7 +303,7 @@ class MetronomScene(scene.Scene):
     self.signal.increment_time(self.dt)
     if self.signal.is_pulse:
       self.beat += 1
-      self.beat_index = self.beat //4% self.note
+      self.beat_index = self.beat % self.note
       self.update_label()
       self.lamp.update_status(self.beat)
       self.feedback.weak if self.beat_index else self.feedback.strong
