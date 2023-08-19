@@ -1,4 +1,7 @@
+from pathlib import Path
+
 import scene
+import sound
 import ui
 
 from objc_util import ObjCClass, uiimage_to_png
@@ -123,7 +126,13 @@ class Feedback:
 class ClickSound:
 
   def __init__(self):
-    pass
+    root_str = '/System/Library/Audio/UISounds/'
+    caf_name = 'Tink.caf'
+    self.note_path = Path(root_str, caf_name)
+
+  #@ui.in_background
+  def call(self):
+    sound.play_effect(f'{self.note_path}')
 
 
 class PlayButton(scene.Node):
@@ -287,6 +296,7 @@ class MetronomScene(scene.Scene):
     self.lamp = Lamp(parent=self)
     self.play_botton = PlayButton(parent=self)
     self.feedback = Feedback()
+    self.click_sound = ClickSound()
 
     position = self.size / 2
 
@@ -307,6 +317,7 @@ class MetronomScene(scene.Scene):
       self.update_label()
       self.lamp.update_status(self.beat)
       self.feedback.weak if self.beat_index else self.feedback.strong
+      self.click_sound.call()
 
   def did_evaluate_actions(self):
     pass
@@ -351,7 +362,7 @@ class View(ui.View):
 
 if __name__ == '__main__':
   BPM: float = 112.0
-  NOTE: int = 16
+  NOTE: int = 8
 
   metronom_scene = MetronomScene(BPM, NOTE)
 
