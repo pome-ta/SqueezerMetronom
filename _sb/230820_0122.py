@@ -365,7 +365,7 @@ class View(ui.View):
 
 
 if __name__ == '__main__':
-  BPM: float = 112.0
+  BPM: float = 124.14
   NOTE: int = 16
 
   metronom_scene = MetronomScene(BPM, NOTE)
