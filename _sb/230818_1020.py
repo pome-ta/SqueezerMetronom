@@ -201,7 +201,7 @@ class Lamp(scene.Node):
     self.wrap: scene.ShapeNode
     self.dot_matrix: list[list[scene.ShapeNode, ]]
 
-    self.line_width: int = 4
+    self.line_width: int = 2
 
     self.active_is = {
       'fill_color': TINT_COLOR,
@@ -228,7 +228,7 @@ class Lamp(scene.Node):
     self.dot_matrix = [[_f() for _ in range(4)] for _ in range(4)]
 
     self.change_size_position()
-    #self.update_status(0)
+    self.update_status(0)
 
   def __create_dot(self) -> scene.ShapeNode:
     shape_node = scene.ShapeNode(parent=self.wrap)
@@ -236,11 +236,11 @@ class Lamp(scene.Node):
 
   def update_status(self, active_index: int):
     # todo: 全部書き換えるより、前回のindex と今回のindex のみ処理をする？
-    ra = active_index // 4 % 4
-    ca = active_index % 4
-    for r, rows in enumerate(self.dot_matrix):
-      for c, dot in enumerate(rows):
-        if r == ra and c == ca:
+    beat_index = active_index // 4 % 4
+    note_index = active_index % 4  # 音符
+    for yi, rows in enumerate(self.dot_matrix):
+      for xi, dot in enumerate(rows):
+        if yi == beat_index and xi == note_index:
           dot.fill_color = self.active_is['fill_color']
           dot.stroke_color = self.active_is['stroke_color']
         else:
@@ -249,36 +249,30 @@ class Lamp(scene.Node):
 
   def change_size_position(self):
     pos_x, pos_y = self.parent.size * scene.Size(1 / 2, 1 / 1.5)
-    sq_wrap = min(self.parent.size) / 1.25
     wrap_w = min(self.parent.size) / 1.25
     wrap_h = min(self.parent.size) / 1.75
 
     self.wrap.path = ui.Path.rect(0, 0, wrap_w, wrap_h)
     self.wrap.position = (pos_x, pos_y)
 
+    # 4x4 のdot を囲むpadding 枠
     guide_w = wrap_w / 4
     guide_h = wrap_h / 4
-    offset_w = (wrap_w / 2) - (wrap_w / 8)
-    offset_h = (wrap_h / 2) - (wrap_h / 8)
 
     oval_sq = min(guide_w, guide_h) * 0.64
     oval_path = ui.Path.oval(0, 0, oval_sq, oval_sq)
     oval_path.line_width = self.line_width
 
-    cntr = 0
-    stps = 1 / 16
-    #print('')
-    for xi, rows in enumerate(self.dot_matrix):
-      for yi, dot in enumerate(rows):
+    # `wrap` の`position(0, 0)` を左上起点に(あと微調整)
+    offset_w = -((wrap_w / 2) - (wrap_w / 8))
+    offset_h = +((wrap_h / 2) - (wrap_h / 8))
+
+    for yi, rows in enumerate(self.dot_matrix):
+      for xi, dot in enumerate(rows):
         dot.path = oval_path
-        dot.fill_color = cntr
-        cntr += stps
-        x = guide_w * xi - offset_w
-        #print(guide_w)
-        #print(offset_w)
-        #print('__')
-        y = guide_h * yi - offset_h
-        dot.position = (cntr * offset_w, 0)
+        x = offset_w + guide_w * xi
+        y = offset_h - guide_h * yi
+        dot.position = (x, y)
 
 
 class MetronomScene(scene.Scene):
@@ -315,7 +309,7 @@ class MetronomScene(scene.Scene):
       self.beat += 1
       self.beat_index = self.beat % BEAT
       self.update_label()
-      #self.lamp.update_status(self.beat)
+      self.lamp.update_status(self.beat)
       self.feedback.weak if self.beat_index else self.feedback.strong
 
   def did_evaluate_actions(self):
