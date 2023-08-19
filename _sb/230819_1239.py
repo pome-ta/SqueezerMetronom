@@ -59,7 +59,6 @@ class Signal:
   def reset(self):
     self.stock_time = 0.0
     self.past_pulse = -1
-    
 
     sec = self.bpm / 60
     step = 4 / self.note  # 拍子対応
@@ -149,7 +148,7 @@ class PlayButton(scene.Node):
     self.wrap = scene.ShapeNode(**wrap_kwargs)
 
     # todo: debug
-    self.wrap.stroke_color = 'cyan'
+    #self.wrap.stroke_color = 'cyan'
 
     self.__create_icon()
     self.change_size_position()
