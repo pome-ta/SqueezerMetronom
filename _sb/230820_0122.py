@@ -236,8 +236,10 @@ class Lamp(scene.Node):
     self.update_status(0)
 
   def __create_dot(self) -> scene.ShapeNode:
-    shape_node = scene.ShapeNode(parent=self.wrap)
-    return shape_node
+    dot = scene.ShapeNode(parent=self.wrap)
+    dot.fill_color = self.deactive_is['fill_color']
+    dot.stroke_color = self.deactive_is['stroke_color']
+    return dot
 
   @ui.in_background
   def update_status(self, active_index: int):
