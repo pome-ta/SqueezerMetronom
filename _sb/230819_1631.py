@@ -130,7 +130,7 @@ class ClickSound:
     caf_name = 'Tink.caf'
     self.note_path = Path(root_str, caf_name)
 
-  #@ui.in_background
+  @ui.in_background
   def call(self):
     sound.play_effect(f'{self.note_path}')
 
@@ -239,6 +239,7 @@ class Lamp(scene.Node):
     shape_node = scene.ShapeNode(parent=self.wrap)
     return shape_node
 
+  @ui.in_background
   def update_status(self, active_index: int):
     # todo: 全部書き換えるより、前回のindex と今回のindex のみ処理をする？
     beat_index = active_index // 4 % 4
@@ -315,9 +316,10 @@ class MetronomScene(scene.Scene):
       self.beat += 1
       self.beat_index = self.beat % self.note
       self.update_label()
-      self.lamp.update_status(self.beat)
+
       self.feedback.weak if self.beat_index else self.feedback.strong
       self.click_sound.call()
+      self.lamp.update_status(self.beat)
 
   def did_evaluate_actions(self):
     pass
@@ -362,7 +364,7 @@ class View(ui.View):
 
 if __name__ == '__main__':
   BPM: float = 112.0
-  NOTE: int = 8
+  NOTE: int = 16
 
   metronom_scene = MetronomScene(BPM, NOTE)
 
